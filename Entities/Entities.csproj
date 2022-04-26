@@ -4,4 +4,13 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Characters\Tier1\" />
+    <Folder Include="Characters\Tier6\" />
+    <Folder Include="Characters\Tier5\" />
+    <Folder Include="Characters\Tier4\" />
+    <Folder Include="Characters\Tier3\" />
+    <Folder Include="Characters\Tier2\" />
+  </ItemGroup>
+
 </Project>
