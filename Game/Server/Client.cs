@@ -66,11 +66,13 @@ namespace Game.Server
 
 			stm.Write(ba, 0, ba.Length);
 
+			/*
 			byte[] bb = new byte[100];
 			int k = stm.Read(bb, 0, 100);
 
 			for (int i = 0; i < k; i++)
 				Console.Write(Convert.ToChar(bb[i]));
+			*/
 		}
 
 		public void Connect2()

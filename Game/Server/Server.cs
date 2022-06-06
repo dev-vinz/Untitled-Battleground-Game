@@ -9,6 +9,8 @@ using System.Threading;
 using Entities.Characters;
 using Newtonsoft.Json;
 using Entities.Characters.Tier1;
+using Newtonsoft.Json.Linq;
+using Utilities.ExtensionMethods;
 
 #nullable enable
 
@@ -99,14 +101,28 @@ namespace Game.Server
 
 					string[]? tabStr = JsonConvert.DeserializeObject<string[]>(strCharacters);
 
-					// TODO : Changer Character, récupérer je ne sais comment le bon type
-					var temp = tabStr?[0].Split("\"");
-					Console.WriteLine(temp[3]);
-					// tabCharacters[i] = tabStr?.Select(c => Character.Parse<Character>(c))?.ToArray() ?? Array.Empty<Character>();
+					IEnumerable<JObject>? objects = tabStr?.Select(c => JObject.Parse(c));
+					string?[] characterNames = objects?.Select(o => o.First?.First?.ToString())?.GetNotNullValues() ?? Array.Empty<string>();
 
-					ASCIIEncoding asen = new ASCIIEncoding();
-					socket.Send(asen.GetBytes("The string was recieved by the server."));
-					Console.WriteLine("\nSent Acknowledgement");
+					if (characterNames.Length < 1) return;
+
+					tabCharacters[index] = new Character[characterNames.Length];
+
+					for (int k = 0; k < characterNames.Length; k++)
+					{
+						string? name = characterNames[k];
+
+						switch (name)
+						{
+							case Ant.NAME:
+								tabCharacters[index][k] = new Ant();
+								break;
+							default:
+								throw new ArgumentOutOfRangeException(nameof(name), name, null);
+						}
+					}
+
+					Console.WriteLine($"Got {characterNames.Length} pets from Player {index + 1} : {string.Join("; ", characterNames)}");
 				});
 
 				threads[i].Start(i);
@@ -120,6 +136,9 @@ namespace Game.Server
 			/* Apply turn - Make battle */
 
 			// TODO
+
+			/* Apply turn - Send results to clients */
+			SendResults();
 		}
 
 		public void Stop()
@@ -219,6 +238,15 @@ namespace Game.Server
 			catch (Exception)
 			{
 				throw;
+			}
+		}
+
+		private void SendResults()
+		{
+			foreach (Socket socket in clients)
+			{
+				ASCIIEncoding asen = new ASCIIEncoding();
+				socket.Send(asen.GetBytes("Nique ta race <3"));
 			}
 		}
 

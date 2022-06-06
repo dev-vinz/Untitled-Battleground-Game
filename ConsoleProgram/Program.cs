@@ -8,10 +8,13 @@ namespace ConsoleProgram
 {
 	internal class Program
 	{
+		// Thread Client
+		// Thread Server
+
 		static void Main(string[] args)
 		{
 			/*
-			Player p = new Player("192.168.56.1");
+			Player p = new Player("157.26.104.10");
 			p.Connect();
 
 			p.Add(new Ant(), 0);
@@ -28,8 +31,8 @@ namespace ConsoleProgram
 			*/
 
 			/* Test for Hosting */
-						
-			Server server = new Server(2);
+
+			Server server = new Server(1);
 			Player player = new Player(server.IP);
 
 			player.Connect();
@@ -37,7 +40,14 @@ namespace ConsoleProgram
 
 			Console.WriteLine("Le jeu démarre");
 
-			server.ApplyTurn();
+			player.Add(new Ant(), 0);
+
+			while (true)
+			{
+				Console.WriteLine("******");
+				player.Send(player.SerializedCharacters);
+				server.ApplyTurn();
+			}
 
 			Console.ReadLine();
 		}

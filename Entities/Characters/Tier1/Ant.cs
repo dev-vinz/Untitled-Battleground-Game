@@ -10,7 +10,8 @@ namespace Entities.Characters.Tier1
 {
 	public class Ant : Character
 	{
-		public const string NAME = "Ant"
+		public const string NAME = "Ant";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
