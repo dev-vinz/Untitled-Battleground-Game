@@ -26,13 +26,12 @@ namespace ConsoleProgram
 			Player p = new Player("157.26.104.10");
 			p.Connect();
 
-			p.Add(new Ant(), 0);
-			p.Send(p.SerializedCharacters);
+			p.PlayGame();
 		}
 
 		private static void RunServer()
 		{
-			Server server = new Server(1);
+			Server server = new Server(2);
 
 			Thread thClient = new Thread((object data) =>
 			{
@@ -42,13 +41,11 @@ namespace ConsoleProgram
 
 				player.Connect();
 
-				player.Add(new Ant(), 0);
-
 				while (true)
 				{
 					Console.WriteLine("*** PLAYER ***");
-					player.Send(player.SerializedCharacters);
-					Thread.Sleep(5000);
+
+					player.PlayGame();
 				}
 			});
 

@@ -246,7 +246,7 @@ namespace Game.Server
 			foreach (Socket socket in clients)
 			{
 				ASCIIEncoding asen = new ASCIIEncoding();
-				socket.Send(asen.GetBytes("Nique ta race <3"));
+				socket.Send(asen.GetBytes($"*** SERVER *** : Just sent battle result to {((IPEndPoint?)socket.RemoteEndPoint)?.Address}"));
 			}
 		}
 

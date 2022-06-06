@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utilities;
 
 namespace Game
 {
@@ -100,9 +101,13 @@ namespace Game
             {
 				Console.WriteLine($"You have {health}HP left");
 				UpdateTeam();
+
+				Helpers.ClearConsoleBuffer();
 				Send(SerializedCharacters);
 
-				health--;
+				bool won = Read();
+
+				if (!won) health--;
             }
         }
 

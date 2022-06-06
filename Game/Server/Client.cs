@@ -65,14 +65,19 @@ namespace Game.Server
 			Console.WriteLine("Transmitting.....");
 
 			stm.Write(ba, 0, ba.Length);
+		}
 
-			/*
+		public bool Read()
+		{
+			Stream stm = this.tcpClient.GetStream();
+
 			byte[] bb = new byte[100];
 			int k = stm.Read(bb, 0, 100);
 
 			for (int i = 0; i < k; i++)
 				Console.Write(Convert.ToChar(bb[i]));
-			*/
+
+			return false;
 		}
 
 		public void Connect2()
