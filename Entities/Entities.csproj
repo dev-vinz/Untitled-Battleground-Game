@@ -4,13 +4,24 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>preview</LangVersion>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Folder Include="Characters\Tier1\" />
     <Folder Include="Characters\Tier6\" />
     <Folder Include="Characters\Tier5\" />
     <Folder Include="Characters\Tier4\" />
     <Folder Include="Characters\Tier3\" />
     <Folder Include="Characters\Tier2\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
 </Project>
