@@ -9,9 +9,6 @@ namespace ConsoleProgram
 {
 	internal class Program
 	{
-		// Thread Client
-		// Thread Server
-
 		static void Main(string[] args)
 		{
 			//RunClient();
