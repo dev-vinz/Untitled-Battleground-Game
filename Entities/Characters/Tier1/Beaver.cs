@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Entities.Characters.Tier1
 {
-	public class Ant : Character
+	public class Beaver : Character
 	{
-		public const string NAME = "Ant"
+				public const string NAME = "Beaver"
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,35 +28,36 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Beaver()
 		{
 			Name = NAME;
 			Tier = 1;
 			Damage = 2;
-			Health = 1;
-			Ability = Ability.Faint;
+			Health = 2;
+			Ability = Ability.StartOfBattle;
 		}
 
 		public override Character Clone()
 		{
 			throw new NotImplementedException();
 		}
-
+<
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* Gives +2 health to a random ally character
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
 			// Randomize target position
 			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
+			int index;
+
+			do
 			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
+			index = rnd.Next(0, 4); 
+			}while(index==BattlefieldPosition) //So the Beaver cant trigger on himself
+
 			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			return new BeaverEventArgs(Side.Player, index, 2*this.level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

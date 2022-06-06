@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier1
+namespace Entities.Characters.Tier4
 {
-	public class Ant : Character
+	public class Otter : Character
 	{
-		public const string NAME = "Ant"
+		public const string NAME = "Otter"
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,13 +27,13 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Otter()
 		{
 			Name = NAME;
-			Tier = 1;
-			Damage = 2;
-			Health = 1;
-			Ability = Ability.Faint;
+			Tier = 4;
+			Damage = 6;
+			Health = 8;
+			Ability = Ability.faint;
 		}
 
 		public override Character Clone()
@@ -42,20 +42,15 @@ namespace Entities.Characters.Tier1
 		}
 
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* When it's dies deals it's Health to an oponnet
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
 			// Randomize target position
 			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
-			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
+			int index = rnd.Next(0, 4); 
 			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			return new OtterEventArgs(Side.Opponent, index, this.Health*this.level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

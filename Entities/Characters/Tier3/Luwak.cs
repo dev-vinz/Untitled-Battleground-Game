@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier1
+namespace Entities.Characters.Tier2
 {
-	public class Ant : Character
+	public class Luwak : Character
 	{
-		public const string NAME = "Ant"
+						public const string NAME = "Luwak"
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,13 +28,13 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Blowfish()
 		{
 			Name = NAME;
-			Tier = 1;
-			Damage = 2;
-			Health = 1;
-			Ability = Ability.Faint;
+			Tier = 3;
+			Damage = 10;
+			Health = 10;
+			Ability = Ability.StartOfBattle;
 		}
 
 		public override Character Clone()
@@ -42,20 +43,19 @@ namespace Entities.Characters.Tier1
 		}
 
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* At the start of the battle kill a random ally
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
-			// Randomize target position
 			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
+			int index;
+			do
 			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
+			index = rnd.Next(0, 4); 
+			}while(index==BattlefieldPosition) //So the Luwak cant trigger on himself
+
 			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			return new LuwakEventArgs(Side.Player, index, 999999);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

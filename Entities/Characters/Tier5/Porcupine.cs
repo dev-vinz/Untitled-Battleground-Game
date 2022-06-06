@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier1
+namespace Entities.Characters.Tier5
 {
-	public class Ant : Character
+	public class Porcupine : Character
 	{
-		public const string NAME = "Ant"
+		public const string NAME = "Porcupine"
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,13 +27,13 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Porcupine()
 		{
 			Name = NAME;
-			Tier = 1;
-			Damage = 2;
-			Health = 1;
-			Ability = Ability.Faint;
+			Tier = 5;
+			Damage = 1;
+			Health = 15;
+			Ability = Ability.StartOfBattle;
 		}
 
 		public override Character Clone()
@@ -42,20 +42,12 @@ namespace Entities.Characters.Tier1
 		}
 
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* Deal 1 damage at to the pet behind him at the start of battle
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
-			// Randomize target position
-			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
-			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
-			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			int index = BattlefieldPosition+1;
+			return new PorcupineEventArgs(Side.Player, index, 1);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier1
+namespace Entities.Characters.Tier6
 {
-	public class Ant : Character
+	public class Penguin : Character
 	{
-		public const string NAME = "Ant"
+		public const string NAME = "Penguin"
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,12 +27,12 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Penguin()
 		{
 			Name = NAME;
-			Tier = 1;
-			Damage = 2;
-			Health = 1;
+			Tier = 5;
+			Damage = 5;
+			Health = 5;
 			Ability = Ability.Faint;
 		}
 
@@ -42,20 +42,17 @@ namespace Entities.Characters.Tier1
 		}
 
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* Give his Health and attack to a random ally
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
-			// Randomize target position
 			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
+			int index;
+			do
 			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
-			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			index = rnd.Next(0, 4); 
+			}while(index==BattlefieldPosition) //So the Lucane cant trigger on himself
+			return new PenguinEventArgs(Side.Player, index, this.Health*this.level, this.Damage*this.level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

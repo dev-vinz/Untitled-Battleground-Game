@@ -6,11 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier1
+namespace Entities.Characters.Tier2
 {
-	public class Ant : Character
+	public class Shrimp : Character
 	{
-		public const string NAME = "Ant"
+						public const string NAME = "Shrimp"
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -27,13 +28,13 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ant()
+		public Shrimp()
 		{
 			Name = NAME;
-			Tier = 1;
-			Damage = 2;
+			Tier = 2;
+			Damage = 5;
 			Health = 1;
-			Ability = Ability.Faint;
+			Ability = Ability.faint;
 		}
 
 		public override Character Clone()
@@ -42,20 +43,13 @@ namespace Entities.Characters.Tier1
 		}
 
 		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
+		* When it dies deal 5 damage to the last enemy
 		*/
 		public override AbilityEventArgs TriggerAbility()
 		{			
-			// Randomize target position
-			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
-			{
-				return null;
-			}
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
-			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			int index = 4;
+
+			return new ToucanEventArgs(Side.Opponent, index, 5*this.level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
