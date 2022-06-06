@@ -130,7 +130,6 @@ namespace Game
 			if (player.Characters.ElementAt(teamPosition) is null) //1)
 			{
 				player.Add(character, teamPosition);
-
 			}
 			/*
 			else if (player.Characters.ElementAt(teamPosition) is characterType) //3)

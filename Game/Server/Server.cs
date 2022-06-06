@@ -77,17 +77,16 @@ namespace Game.Server
 			Thread[] threads = new Thread[nbClients];
 			Character[][] tabCharacters = new Character[nbClients][];
 
-			Console.WriteLine(threads.Length + "\n***");
-
-			for (int i = 0; i < threads.Length; i++)
+			for (int i = 0; i < nbClients; i++)
 			{
-				Console.WriteLine($"i : {i}");
-				Console.WriteLine($"length : {threads.Length}");
-				
-				threads[i] = new Thread(() =>
+				threads[i] = new Thread((object? oIndex) =>
 				{
+					if (oIndex is null) return;
+
+					int index = (int)oIndex;
+
 					byte[] tabResponse = new byte[1000];
-					Socket socket = clients[i];
+					Socket socket = clients[index];
 
 					int nbBytes = socket.Receive(tabResponse);
 					string strCharacters = "";
@@ -101,7 +100,8 @@ namespace Game.Server
 					string[]? tabStr = JsonConvert.DeserializeObject<string[]>(strCharacters);
 
 					// TODO : Changer Character, récupérer je ne sais comment le bon type
-					Console.WriteLine(tabStr?[0]);
+					var temp = tabStr?[0].Split("\"");
+					Console.WriteLine(temp[3]);
 					// tabCharacters[i] = tabStr?.Select(c => Character.Parse<Character>(c))?.ToArray() ?? Array.Empty<Character>();
 
 					ASCIIEncoding asen = new ASCIIEncoding();
@@ -109,7 +109,7 @@ namespace Game.Server
 					Console.WriteLine("\nSent Acknowledgement");
 				});
 
-				threads[i].Start();
+				threads[i].Start(i);
 			}
 
 			foreach (Thread thread in threads)

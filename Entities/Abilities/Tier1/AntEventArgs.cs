@@ -9,12 +9,33 @@ namespace Entities.Abilities.Tier1
 	public class AntEventArgs : AbilityEventArgs
 	{
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                               FIELDS                              *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+		private readonly Side side;
+		private readonly int targetPosition;
+		private readonly int healthGiven;
+		private readonly int attackGiven;
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Side Side { get; set; }
-		public int TargetPosition { get; set;}
-		public int HealthGiven { get; set; }
-		public int AttackGiven { get; set; }
+		public Side Side => side;
+		public int TargetPosition => targetPosition;
+		public int HealthGiven => healthGiven;
+		public int AttackGiven => attackGiven;
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                            CONSTRUCTORS                           *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+		public AntEventArgs(Side side, int targetPosition, int healthGiven, int attackGiven)
+		{
+			this.side = side;
+			this.targetPosition = targetPosition;
+			this.healthGiven = healthGiven;
+			this.attackGiven = attackGiven;
+		}
 	}
 }

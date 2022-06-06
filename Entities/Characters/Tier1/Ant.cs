@@ -1,4 +1,5 @@
 ﻿using Entities.Abilities;
+using Entities.Abilities.Tier1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +41,12 @@ namespace Entities.Characters.Tier1
 		}
 
 		public override AbilityEventArgs TriggerAbility()
-		{
-			throw new NotImplementedException();
+		{			
+			// Randomize target position
+			Random rnd = new Random();
+			int index = rnd.Next(BattlefieldPosition, 4);
+
+			return new AntEventArgs(Side.Player, index, 1, 2);
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
