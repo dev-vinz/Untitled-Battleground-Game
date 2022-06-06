@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Entities.Characters.Tier2
 {
 	public class Blowfish : Character
 	{
-						public const string NAME = "Blowfish"
+		public const string NAME = "Blowfish";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -42,16 +43,17 @@ namespace Entities.Characters.Tier2
 			throw new NotImplementedException();
 		}
 
-		/*
-		* When hurt deals 2 damage to an random oponnent
-		*/
+		/// <summary>
+		/// When hurt deals 2 damage to an random oponnent
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4); 
-			
-			return new BlowfishEventArgs(Side.Opponent, index, 2*this.level);//it's to the combat to see if it's a valid position
+			int index = rnd.Next(0, 4);
+
+			return new BlowfishEventArgs(Side.Opponent, index, 2 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

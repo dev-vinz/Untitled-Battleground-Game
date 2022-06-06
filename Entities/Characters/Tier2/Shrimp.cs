@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Entities.Characters.Tier2
 {
 	public class Shrimp : Character
 	{
-						public const string NAME = "Shrimp"
+		public const string NAME = "Shrimp";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -34,7 +35,7 @@ namespace Entities.Characters.Tier2
 			Tier = 2;
 			Damage = 5;
 			Health = 1;
-			Ability = Ability.faint;
+			Ability = Ability.Faint;
 		}
 
 		public override Character Clone()
@@ -42,14 +43,15 @@ namespace Entities.Characters.Tier2
 			throw new NotImplementedException();
 		}
 
-		/*
-		* When it dies deal 5 damage to the last enemy
-		*/
+		/// <summary>
+		/// When it dies deal 5 damage to the last enemy
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			int index = 4;
 
-			return new ToucanEventArgs(Side.Opponent, index, 5*this.level);//it's to the combat to see if it's a valid position
+			return new ShrimpEventArgs(Side.Opponent, index, 5 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

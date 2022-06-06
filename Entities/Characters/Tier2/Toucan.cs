@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Entities.Characters.Tier2
 {
 	public class Toucan : Character
 	{
-						public const string NAME = "Toucan"
+		public const string NAME = "Toucan";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -42,18 +43,19 @@ namespace Entities.Characters.Tier2
 			throw new NotImplementedException();
 		}
 
-		/*
-		* When hurt give +2/+2 to an ally just behind
-		*/
+		/// <summary>
+		/// When hurt give +2/+2 to an ally just behind
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
-			int index = BattlefieldPosition+1;
-			if(index>4)
+		{
+			int index = BattlefieldPosition + 1;
+			if (index > 4)
 			{
 				return null;
 			}
-			
-			return new ToucanEventArgs(Side.Player, index, 2*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+
+			return new ToucanEventArgs(Side.Player, index, 2 * Level, 2 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

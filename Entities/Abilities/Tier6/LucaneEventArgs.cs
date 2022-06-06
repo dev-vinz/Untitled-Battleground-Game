@@ -28,7 +28,7 @@ namespace Entities.Abilities.Tier3
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public ParrotEventArgs(Side side, int targetPosition, int healthGiven)
+		public LucaneEventArgs(Side side, int targetPosition, int healthGiven)
 		{
 			this.side = side;
 			this.targetPosition = targetPosition;

@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier4
 {
 	public class Ox : Character
 	{
-		public const string NAME = "Ox"
+		public const string NAME = "Ox";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -33,7 +35,7 @@ namespace Entities.Characters.Tier4
 			Tier = 4;
 			Damage = 4;
 			Health = 10;
-			Ability = Ability.hurt;
+			Ability = Ability.Hurt;
 		}
 
 		public override Character Clone()
@@ -41,17 +43,20 @@ namespace Entities.Characters.Tier4
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Give +2/+2 to the pet just behind
-		*/
+		/// <summary>
+		/// Give +2/+2 to the pet just behind
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
-			int index = BattlefieldPosition+1;
-			if(index>4)
+		{
+			int index = BattlefieldPosition + 1;
+
+			if (index > 4)
 			{
 				return null;
 			}
-			return new OxEventArgs(Side.Player, index, 2*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+
+			return new OxEventArgs(Side.Player, index, 2 * Level, 2 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

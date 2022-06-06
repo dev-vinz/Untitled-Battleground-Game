@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier5
 {
 	public class Parrot : Character
 	{
-		public const string NAME = "Parrot"
+		public const string NAME = "Parrot";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -41,13 +43,14 @@ namespace Entities.Characters.Tier5
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Deal it's attack to the first pet
-		*/
+		/// <summary>
+		/// Deal it's attack to the first pet
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			int index = 0;
-			return new ParrotEventArgs(Side.Opponent, index, this.damage*this.level);//it's to the combat to see if it's a valid position
+			return new ParrotEventArgs(Side.Opponent, index, Damage * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

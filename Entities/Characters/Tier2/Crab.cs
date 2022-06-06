@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Entities.Characters.Tier2
 {
 	public class Crab : Character
 	{
-						public const string NAME = "Crab"
+		public const string NAME = "Crab";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -42,18 +43,19 @@ namespace Entities.Characters.Tier2
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Give its health to an ally just in front
-		*/
+		/// <summary>
+		/// Give its health to an ally just in front
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
-			int index = BattlefieldPosition-1;
-			if(index<0)
+		{
+			int index = BattlefieldPosition - 1;
+			if (index < 0)
 			{
 				return null;
 			}
-			
-			return new CrabEventArgs(Side.Player, index, this.Health*this.level);//it's to the combat to see if it's a valid position
+
+			return new CrabEventArgs(Side.Player, index, Health * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

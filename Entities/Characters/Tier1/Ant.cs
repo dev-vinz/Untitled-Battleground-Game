@@ -42,21 +42,24 @@ namespace Entities.Characters.Tier1
 			throw new NotImplementedException();
 		}
 
-		/*
-		* When it dies it give +2 attack and +1 health to an ally behind
-		*/
+		/// <summary>
+		/// When it dies it give +2 attack and +1 health to an ally behind
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			// Randomize target position
 			Random rnd = new Random();
-			int nextPosition = BattlefieldPosition+1;
-			if(nextPosition>4)//The ant is the last pet, it cant give it to someone
+			int nextPosition = BattlefieldPosition + 1;
+
+			if (nextPosition > 4)//The ant is the last pet, it cant give it to someone
 			{
 				return null;
 			}
+
 			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
-			
-			return new AntEventArgs(Side.Player, index, 1*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+
+			return new AntEventArgs(Side.Player, index, 1 * Level, 2 * Level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

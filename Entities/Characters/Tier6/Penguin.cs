@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier6;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier6
 {
 	public class Penguin : Character
 	{
-		public const string NAME = "Penguin"
+		public const string NAME = "Penguin";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -41,18 +43,21 @@ namespace Entities.Characters.Tier6
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Give his Health and attack to a random ally
-		*/
+		/// <summary>
+		/// Give his Health and attack to a random ally
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			Random rnd = new Random();
 			int index;
+
 			do
 			{
-			index = rnd.Next(0, 4); 
-			}while(index==BattlefieldPosition) //So the Lucane cant trigger on himself
-			return new PenguinEventArgs(Side.Player, index, this.Health*this.level, this.Damage*this.level);//it's to the combat to see if it's a valid position
+				index = rnd.Next(0, 4);
+			} while (index == BattlefieldPosition); // So the Lucane cant trigger on himself
+
+			return new PenguinEventArgs(Side.Player, index, Health * Level, Damage * Level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

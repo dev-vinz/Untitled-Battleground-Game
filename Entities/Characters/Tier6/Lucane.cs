@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier6
 {
 	public class Lucane : Character
 	{
-		public const string NAME = "Lucane"
+		public const string NAME = "Lucane";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -41,18 +43,21 @@ namespace Entities.Characters.Tier6
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Give his Health to an random ally
-		*/
+		/// <summary>
+		/// Give his Health to an random ally
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			Random rnd = new Random();
 			int index;
+
 			do
 			{
-			index = rnd.Next(0, 4); 
-			}while(index==BattlefieldPosition) //So the Lucane cant trigger on himself
-			return new ParrotEventArgs(Side.Player, index, this.Health*this.level);//it's to the combat to see if it's a valid position
+				index = rnd.Next(0, 4);
+			} while (index == BattlefieldPosition); // So the Lucane cant trigger on himself
+
+			return new LucaneEventArgs(Side.Player, index, Health * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

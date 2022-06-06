@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,7 @@ namespace Entities.Characters.Tier2
 {
 	public class Horse : Character
 	{
-						public const string NAME = "Horse"
+		public const string NAME = "Horse";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -42,14 +43,15 @@ namespace Entities.Characters.Tier2
 			throw new NotImplementedException();
 		}
 
-		/*
-		* At the start of the battle deal 3 damage to the first ennemy pet
-		*/
+		/// <summary>
+		/// At the start of the battle deal 3 damage to the first ennemy pet
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
-			int index = 0; 
-			
-			return new BlowfishEventArgs(Side.Opponent, index, 3*this.level);//it's to the combat to see if it's a valid position
+		{
+			int index = 0;
+
+			return new HorseEventArgs(Side.Opponent, index, 3 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

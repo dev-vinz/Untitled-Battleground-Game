@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Abilities.Tier2
 {
-	public class CrabEventArgs : AbilityEventArgs
+	public class ShrimpEventArgs : AbilityEventArgs
 	{
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|

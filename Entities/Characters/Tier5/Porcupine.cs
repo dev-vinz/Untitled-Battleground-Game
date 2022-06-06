@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier5
 {
 	public class Porcupine : Character
 	{
-		public const string NAME = "Porcupine"
+		public const string NAME = "Porcupine";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -41,13 +43,14 @@ namespace Entities.Characters.Tier5
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Deal 1 damage at to the pet behind him at the start of battle
-		*/
+		/// <summary>
+		/// Deal 1 damage at to the pet behind him at the start of battle
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
-			int index = BattlefieldPosition+1;
-			return new PorcupineEventArgs(Side.Player, index, 1);//it's to the combat to see if it's a valid position
+		{
+			int index = BattlefieldPosition + 1;
+			return new PorcupineEventArgs(Side.Player, index, 1); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

@@ -10,7 +10,7 @@ namespace Entities.Characters.Tier1
 {
 	public class Mosquito : Character
 	{
-						public const string NAME = "Mosquito"
+		public const string NAME = "Mosquito";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
@@ -42,17 +42,17 @@ namespace Entities.Characters.Tier1
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Deals 1 Damage at start of Battle the a random oponnent
-		*/
+		/// <summary>
+		/// Deals 1 Damage at start of Battle the a random oponnent
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4); 
+			int index = rnd.Next(0, 4);
 
-			
-			return new MosquitoEventArgs(Side.Opponent, index, 1*this.level);//it's to the combat to see if it's a valid position
+			return new MosquitoEventArgs(Side.Opponent, index, 1 * Level);//it's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

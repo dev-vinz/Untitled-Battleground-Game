@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier4
 {
 	public class Giraffe : Character
 	{
-		public const string NAME = "Giraffe"
+		public const string NAME = "Giraffe";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -41,13 +43,14 @@ namespace Entities.Characters.Tier4
 			throw new NotImplementedException();
 		}
 
-		/*
-		* Give +2/+2 to the front pet
-		*/
+		/// <summary>
+		/// Give +2/+2 to the front pet
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			int index = 0;
-			return new GiraffeEventArgs(Side.Player, index, 2*this.level, 2*this.level);//it's to the combat to see if it's a valid position
+			return new GiraffeEventArgs(Side.Player, index, 2 * Level, 2 * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

@@ -1,5 +1,6 @@
 ﻿using Entities.Abilities;
 using Entities.Abilities.Tier1;
+using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +11,8 @@ namespace Entities.Characters.Tier4
 {
 	public class Otter : Character
 	{
-		public const string NAME = "Otter"
+		public const string NAME = "Otter";
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -33,7 +35,7 @@ namespace Entities.Characters.Tier4
 			Tier = 4;
 			Damage = 6;
 			Health = 8;
-			Ability = Ability.faint;
+			Ability = Ability.Faint;
 		}
 
 		public override Character Clone()
@@ -41,16 +43,17 @@ namespace Entities.Characters.Tier4
 			throw new NotImplementedException();
 		}
 
-		/*
-		* When it's dies deals it's Health to an oponnet
-		*/
+		/// <summary>
+		/// When it's dies deals it's Health to an oponnet
+		/// </summary>
+		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
-		{			
+		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4); 
-			
-			return new OtterEventArgs(Side.Opponent, index, this.Health*this.level);//it's to the combat to see if it's a valid position
+			int index = rnd.Next(0, 4);
+
+			return new OtterEventArgs(Side.Opponent, index, Health * Level); // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
