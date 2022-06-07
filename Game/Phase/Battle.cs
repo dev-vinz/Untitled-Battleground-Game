@@ -1,9 +1,12 @@
-﻿using Entities.Characters;
+﻿using Entities.Abilities;
+using Entities.Characters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+#nullable enable
 
 namespace Game.Phase
 {
@@ -13,91 +16,137 @@ namespace Game.Phase
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private Character[] team1;
-		private Character[] team2;
+		private readonly int battleId;
+		private Character[] playerOne;
+		private Character[] playerTwo;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+		
+		private bool IsEnded => playerOne.Any(c => c is not null && c.IsAlive) && playerOne.Any(c => c is not null && c.IsAlive);
 
-		public event EventHandler FaintEvent;
+
+		public int Id => battleId;
+		public bool PlayerWon { get; private set; }
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Battle(Character[] team1, Character[] team2)
+		public Battle(int battleId, Character[] playerOne, Character[] playerTwo)
 		{
-			StartBattle();
-			this.team1 = team1;
-			this.team2 = team2;
+			this.battleId = battleId;
+			this.playerOne = playerOne;
+			this.playerTwo = playerTwo;
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                           PUBLIC METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		public void Start()
+		{
+			#region StartOfBattle Ability
 
+			foreach (Character character in playerOne.Where(c => c.Ability == Ability.StartOfBattle))
+			{
+				OnStartOfBattle((StartOfBattleEventArgs)character.TriggerAbility());
+			}
+
+			foreach (Character character in playerTwo.Where(c => c.Ability == Ability.StartOfBattle))
+			{
+				OnStartOfBattle((StartOfBattleEventArgs)character.TriggerAbility());
+			}
+
+			#endregion
+		}
+
+		public void Run()
+		{
+			while (!IsEnded)
+			{
+				Character aliveOne = playerOne.First(c => c is not null && c.IsAlive);
+				Character aliveTwo = playerTwo.First(c => c is not null && c.IsAlive);
+
+				aliveOne.Health -= aliveTwo.Damage;
+				aliveTwo.Health -= aliveOne.Damage;
+
+				#region Hurt Ability
+
+				if (aliveOne.IsAlive && aliveOne.Ability == Ability.Hurt)
+				{
+					OnHurt((HurtEventArgs)aliveOne.TriggerAbility());
+				}
+
+				if (aliveTwo.IsAlive && aliveTwo.Ability == Ability.Hurt)
+				{
+					OnHurt((HurtEventArgs)aliveTwo.TriggerAbility());
+				}
+
+				#endregion
+
+				#region Faint Ability
+
+				if (aliveOne.IsDead && aliveOne.Ability == Ability.Faint)
+				{
+					OnFaint((FaintEventArgs)aliveOne.TriggerAbility());
+				}
+
+				if (aliveTwo.IsDead && aliveTwo.Ability == Ability.Faint)
+				{
+					OnFaint((FaintEventArgs)aliveTwo.TriggerAbility());
+				}
+
+				#endregion
+			}
+
+			PlayerWon = playerOne.Any(c => c.IsAlive);
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-		private void StartBattle()
-        {
-			int index1 = 0, index2 = 0;
-			//Check start of battle ?
-			while (!IsTeamDead(team1) || !IsTeamDead(team2))
-			{
-				
-				while(team1[index1].IsDead() || team1[index1] is null)
-				{
-					index1++;
-				}
-				while(team2[index2].IsDead() || team2[index2] is null)
-				{
-					index2++;
-				}
-				team2[index2].Health -= team1[index1].Damage;
-				team1[index1].Health -= team2[index2].Damage;
-				//Check hurt ability ?
-				if (team1[index1].IsDead())
-				{
-					//Trigger Ability ?
-				}
-				if (team2[index2].IsDead())
-                {
-					//Trigger Ability ?
-                }
-			}
-			if (IsTeamDead(team2) && IsTeamDead(team1))
-			{
 
-			}
-			else if (IsTeamDead(team1))
-			{
-
-			}
-			else
-			{
-
-			}
-		}
-
-
-		private bool IsTeamDead(Character[] Team)
+		private void OnFaint(FaintEventArgs e)
 		{
-			bool IsDead = true;
-			foreach (Character C in Team)
-			{
-				if (!C.IsDead())
-				{
-					IsDead = false;
-				}
-			}
+			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
 
-			return IsDead;
+			Character character = targetPlayer[e.TargetPosition];
+
+			if (character is null || character.IsDead) return;
+
+			character.Health -= e.HealthReduced;
+			character.Health += e.HealthGiven;
+
+			character.Damage += e.AttackGiven;
 		}
 
+		private void OnHurt(HurtEventArgs e)
+		{
+			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
+
+			Character character = targetPlayer[e.TargetPosition];
+
+			if (character is null || character.IsDead) return;
+
+			character.Health -= e.HealthReduced;
+			character.Health += e.HealthGiven;
+
+			character.Damage += e.AttackGiven;
+		}
+
+		private void OnStartOfBattle(StartOfBattleEventArgs e)
+		{
+			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
+
+			Character character = targetPlayer[e.TargetPosition];
+
+			if (character is null || character.IsDead) return;
+
+			character.Health -= e.HealthReduced;
+			character.Health += e.HealthGiven;
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                         PROTECTED METHODS                         *|

@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,8 +56,15 @@ namespace Entities.Characters.Tier4
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = 0;
-			return new GiraffeEventArgs(Side.Player, index, 2 * Level, 2 * Level); // It's to the combat to see if it's a valid position
+			int target = 0;
+
+			return new StartOfTurnEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				AttackGiven = 2 * Level,
+				HealthGiven = 2 * Level,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

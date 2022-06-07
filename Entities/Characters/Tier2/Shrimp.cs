@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,9 +56,15 @@ namespace Entities.Characters.Tier2
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = 4;
+			int target = 4;
 
-			return new ShrimpEventArgs(Side.Opponent, index, 5 * Level); // It's to the combat to see if it's a valid position
+			return new FaintEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = 5 * Level,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,8 +56,15 @@ namespace Entities.Characters.Tier5
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = 4;
-			return new CrocodileEventArgs(Side.Opponent, index, 7 * Level); // It's to the combat to see if it's a valid position
+			int target = 4;
+
+			return new StartOfBattleEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = 7 * Level,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

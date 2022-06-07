@@ -1,13 +1,11 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier2
+namespace Entities.Characters.Tier3
 {
 	public class Luwak : Character
 	{
@@ -59,14 +57,20 @@ namespace Entities.Characters.Tier2
 		public override AbilityEventArgs TriggerAbility()
 		{
 			Random rnd = new Random();
-			int index;
+			int target;
+
 			do
 			{
-				index = rnd.Next(0, 4);
-			} while (index == BattlefieldPosition); // So the Luwak cant trigger on himself
+				target = rnd.Next(0, 4);
+			} while (target == BattlefieldPosition); // So the Luwak cant trigger on himself
 
-
-			return new LuwakEventArgs(Side.Player, index, 999999); // It's to the combat to see if it's a valid position
+			return new StartOfBattleEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				HealthReduced = 999999,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

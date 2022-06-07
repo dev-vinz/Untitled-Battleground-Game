@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier2;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,13 +56,20 @@ namespace Entities.Characters.Tier2
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = BattlefieldPosition - 1;
-			if (index < 0)
+			int target = BattlefieldPosition - 1;
+
+			if (target < 0)
 			{
 				return null;
 			}
 
-			return new CrabEventArgs(Side.Player, index, Health * Level); // It's to the combat to see if it's a valid position
+			return new StartOfBattleEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				HealthGiven = Health * Level,
+				HealthReduced = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

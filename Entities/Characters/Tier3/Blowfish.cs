@@ -1,13 +1,11 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier2
+namespace Entities.Characters.Tier3
 {
 	public class Blowfish : Character
 	{
@@ -60,9 +58,16 @@ namespace Entities.Characters.Tier2
 		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4);
+			int target = rnd.Next(0, 4);
 
-			return new BlowfishEventArgs(Side.Opponent, index, 2 * Level); // It's to the combat to see if it's a valid position
+			return new HurtEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = 2 * Level,
+				AttackGiven = 0,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

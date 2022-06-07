@@ -1,5 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,9 +58,15 @@ namespace Entities.Characters.Tier1
 		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4);
+			int target = rnd.Next(0, 4);
 
-			return new MosquitoEventArgs(Side.Opponent, index, 1 * Level);//it's to the combat to see if it's a valid position
+			return new StartOfBattleEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = Level,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

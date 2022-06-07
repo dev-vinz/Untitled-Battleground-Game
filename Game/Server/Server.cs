@@ -11,6 +11,11 @@ using Newtonsoft.Json;
 using Entities.Characters.Tier1;
 using Newtonsoft.Json.Linq;
 using Utilities.ExtensionMethods;
+using Entities.Characters.Tier2;
+using Entities.Characters.Tier3;
+using Entities.Characters.Tier4;
+using Entities.Characters.Tier5;
+using Entities.Characters.Tier6;
 
 #nullable enable
 
@@ -178,14 +183,33 @@ namespace Game.Server
 					{
 						string? name = characterNames[k];
 
-						switch (name)
+						tabCharacters[index][k] = name switch
 						{
-							case Ant.NAME:
-								tabCharacters[index][k] = new Ant();
-								break;
-							default:
-								throw new ArgumentOutOfRangeException(nameof(name), name, null);
-						}
+							Ant.NAME => Character.Parse<Ant>(tabStr?[k]),
+							Beaver.NAME => Character.Parse<Beaver>(tabStr?[k]),
+							Mosquito.NAME => Character.Parse<Mosquito>(tabStr?[k]),
+
+							Crab.NAME => Character.Parse<Crab>(tabStr?[k]),
+							Shrimp.NAME => Character.Parse<Shrimp>(tabStr?[k]),
+							Toucan.NAME => Character.Parse<Toucan>(tabStr?[k]),
+
+							Blowfish.NAME => Character.Parse<Blowfish>(tabStr?[k]),
+							Horse.NAME => Character.Parse<Horse>(tabStr?[k]),
+							Luwak.NAME => Character.Parse<Luwak>(tabStr?[k]),
+
+							Giraffe.NAME => Character.Parse<Giraffe>(tabStr?[k]),
+							Otter.NAME => Character.Parse<Otter>(tabStr?[k]),
+							Ox.NAME => Character.Parse<Ox>(tabStr?[k]),
+
+							Crocodile.NAME => Character.Parse<Crocodile>(tabStr?[k]),
+							Parrot.NAME => Character.Parse<Parrot>(tabStr?[k]),
+							Porcupine.NAME => Character.Parse<Beaver>(tabStr?[k]),
+
+							Lucane.NAME => Character.Parse<Lucane>(tabStr?[k]),
+							Penguin.NAME => Character.Parse<Penguin>(tabStr?[k]),
+
+							_ => throw new ArgumentOutOfRangeException(nameof(name), name, null),
+						};
 					}
 				});
 

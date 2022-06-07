@@ -1,5 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,14 +60,21 @@ namespace Entities.Characters.Tier1
 			Random rnd = new Random();
 			int nextPosition = BattlefieldPosition + 1;
 
-			if (nextPosition > 4)//The ant is the last pet, it cant give it to someone
+			if (nextPosition > 4) // The ant is the last pet, it cant give it to someone
 			{
 				return null;
 			}
 
-			int index = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
+			int target = rnd.Next(nextPosition, 4); //So the ant cant't trigger on itself
 
-			return new AntEventArgs(Side.Player, index, 1 * Level, 2 * Level);//it's to the combat to see if it's a valid position
+			return new FaintEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				AttackGiven = 1 * Level,
+				HealthGiven = 2 * Level,
+				HealthReduced = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

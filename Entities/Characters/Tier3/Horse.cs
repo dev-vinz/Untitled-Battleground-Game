@@ -1,13 +1,11 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Entities.Characters.Tier2
+namespace Entities.Characters.Tier3
 {
 	public class Horse : Character
 	{
@@ -58,9 +56,15 @@ namespace Entities.Characters.Tier2
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = 0;
+			int target = 0;
 
-			return new HorseEventArgs(Side.Opponent, index, 3 * Level); // It's to the combat to see if it's a valid position
+			return new StartOfBattleEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = 3 * Level,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

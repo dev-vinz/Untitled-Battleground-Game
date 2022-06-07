@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier6;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,14 +57,21 @@ namespace Entities.Characters.Tier6
 		public override AbilityEventArgs TriggerAbility()
 		{
 			Random rnd = new Random();
-			int index;
+			int target;
 
 			do
 			{
-				index = rnd.Next(0, 4);
-			} while (index == BattlefieldPosition); // So the Lucane cant trigger on himself
+				target = rnd.Next(0, 4);
+			} while (target == BattlefieldPosition); // So the Lucane cant trigger on himself
 
-			return new PenguinEventArgs(Side.Player, index, Health * Level, Damage * Level);//it's to the combat to see if it's a valid position
+			return new FaintEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				AttackGiven = Damage * Level,
+				HealthGiven = Health * Level,
+				HealthReduced = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,9 +58,16 @@ namespace Entities.Characters.Tier4
 		{
 			// Randomize target position
 			Random rnd = new Random();
-			int index = rnd.Next(0, 4);
+			int target = rnd.Next(0, 4);
 
-			return new OtterEventArgs(Side.Opponent, index, Health * Level); // It's to the combat to see if it's a valid position
+			return new FaintEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = Health * Level,
+				AttackGiven = 0,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

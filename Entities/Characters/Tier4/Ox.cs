@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier4;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,14 +56,21 @@ namespace Entities.Characters.Tier4
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = BattlefieldPosition + 1;
+			int target = BattlefieldPosition + 1;
 
-			if (index > 4)
+			if (target > 4)
 			{
 				return null;
 			}
 
-			return new OxEventArgs(Side.Player, index, 2 * Level, 2 * Level); // It's to the combat to see if it's a valid position
+			return new HurtEventArgs
+			{
+				Side = Side.Player,
+				TargetPosition = target,
+				AttackGiven = 2 * Level,
+				HealthGiven = 2 * Level,
+				HealthReduced = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

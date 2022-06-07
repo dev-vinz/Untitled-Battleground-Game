@@ -74,6 +74,10 @@ namespace Entities.Characters
 			protected set { level = value; }
 		}
 
+		public bool IsAlive => health > 0;
+
+		public bool IsDead => !IsAlive;
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -101,11 +105,6 @@ namespace Entities.Characters
 		{
 			return JsonConvert.SerializeObject(this, Formatting.None);
 		}
-
-		public bool IsDead()
-        {
-			return health <= 0;
-        }
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

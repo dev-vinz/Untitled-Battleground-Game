@@ -1,6 +1,4 @@
 ﻿using Entities.Abilities;
-using Entities.Abilities.Tier1;
-using Entities.Abilities.Tier3;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,8 +56,16 @@ namespace Entities.Characters.Tier5
 		/// <returns></returns>
 		public override AbilityEventArgs TriggerAbility()
 		{
-			int index = 0;
-			return new ParrotEventArgs(Side.Opponent, index, Damage * Level); // It's to the combat to see if it's a valid position
+			int target = 0;
+
+			return new FaintEventArgs
+			{
+				Side = Side.Opponent,
+				TargetPosition = target,
+				HealthReduced = Damage * Level,
+				AttackGiven = 0,
+				HealthGiven = 0,
+			}; // It's to the combat to see if it's a valid position
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

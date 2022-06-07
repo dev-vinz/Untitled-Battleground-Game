@@ -27,6 +27,9 @@ namespace Game
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		public bool IsAlive => health > 0;
+		public bool IsDead => !IsAlive;
+
 		public IReadOnlyCollection<Character> Characters
 		{
 			get { return characters; }
@@ -67,11 +70,6 @@ namespace Game
 			UpdateCharactersAbilities();
 		}
 
-		public bool IsDead()
-		{
-			return health <= 0;
-		}
-
 		public void Remove(Character character)
 		{
 			// Assumption, character is valid
@@ -94,7 +92,8 @@ namespace Game
 		public void PlayGame()
         {
 			int turn = 1;
-            while(!IsDead())
+
+            while(IsAlive)
 			{
 				Helpers.ClearConsoleBuffer();
 				Console.WriteLine($"You have {health}HP left");

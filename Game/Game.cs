@@ -1,13 +1,11 @@
 ﻿using Entities.Characters;
 using Entities.Characters.Tier1;
-<<<<<<< HEAD
 using Entities.Characters.Tier2;
+using Entities.Characters.Tier3;
 using Entities.Characters.Tier4;
 using Entities.Characters.Tier5;
 using Entities.Characters.Tier6;
-=======
 using Game.Phase;
->>>>>>> 6bd1e8e (Clone Methods)
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -25,18 +23,20 @@ namespace Game
 {
 	public class Game : Server.Server
 	{
-		public static Character[] TIER1 = { new Ant(), new Beaver(), new Mosquito()};
+		public static Character[] TIER1 = { new Ant(), new Beaver(), new Mosquito() };
 		public static Character[] TIER2 = { new Crab(), new Shrimp(), new Toucan() };
 		public static Character[] TIER3 = { new Blowfish(), new Horse(), new Luwak() };
 		public static Character[] TIER4 = { new Giraffe(), new Otter(), new Ox() };
 		public static Character[] TIER5 = { new Crocodile(), new Parrot(), new Porcupine() };
 		public static Character[] TIER6 = { new Lucane(), new Penguin() };
-		public static Character[] ALLPETS = TIER1.Concat(TIER2).Concat(TIER3).Concat(TIER4).Concat(TIER5).Concat(TIER6).ToArray(); 
+		public static Character[] ALLPETS = TIER1.Concat(TIER2).Concat(TIER3).Concat(TIER4).Concat(TIER5).Concat(TIER6).ToArray();
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                               FIELDS                              *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		private Character[][]? allCharacters;
+		private bool[] tabWinners;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                             PROPERTIES                            *|
@@ -50,6 +50,7 @@ namespace Game
 
 		public Game(int nbClients) : base(nbClients)
 		{
+			tabWinners = new bool[nbClients];
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -62,8 +63,28 @@ namespace Game
 
 			Console.WriteLine($"Got all characters !");
 
-			/* Apply turn - Make battle */
+			/* Make battle */
 			Battle[] battles = CreateBattles();
+			Thread[] threads = new Thread[battles.Length];
+
+			for (int k = 0; k < battles.Length; k++)
+			{
+				threads[k] = new Thread((object? data) =>
+				{
+					if (data is not Battle battle) return;
+
+					battle.Start();
+					battle.Run();
+					tabWinners[battle.Id] = battle.PlayerWon;
+				});
+
+				threads[k].Start(battles[k]);
+			}
+
+			foreach (Thread thread in threads)
+			{
+				thread.Join();
+			}
 
 			/* Apply turn - Send results to clients */
 			Send();
@@ -93,20 +114,17 @@ namespace Game
 				do
 				{
 					rnd = new Random().Next(allCharacters.Length);
-				} while (rnd == k);
+				} while (rnd == k && allCharacters.Length > 1);
 
-<<<<<<< HEAD
-=======
 				Character[] playerOne = allCharacters[k];
 				Character[] playerTwo = allCharacters[rnd];
 
-				battles[k] = new Battle(playerOne, playerTwo);
+				battles[k] = new Battle(k, playerOne, playerTwo);
 			}
 
 			return battles;
 		}
 
->>>>>>> 6bd1e8e (Clone Methods)
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                         PROTECTED METHODS                         *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
