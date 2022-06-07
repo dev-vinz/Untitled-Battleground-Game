@@ -93,30 +93,32 @@ namespace Game
 
 		public void PlayGame()
         {
+			int turn = 1;
             while(!IsDead())
 			{
 				Helpers.ClearConsoleBuffer();
 				Console.WriteLine($"You have {health}HP left");
 
-				UpdateTeam();
+				UpdateTeam(turn);
 				Send(SerializedCharacters);
 
 				bool won = Read();
 
 				if (!won) health--;
+				turn++;
             }
         }
 
-		private void UpdateTeam()
+		private void UpdateTeam(int turn)
         {
-			ObtainNewPet();
+			ObtainNewPet(turn);
 			LevelUpPet();
         }
 
-		private void ObtainNewPet()
+		private void ObtainNewPet(int turn)
         {
-            Ant ant = new Ant();
-			Console.WriteLine($"You received a new pet:{ant.Name}. Do you want to keep it ? [Y/N]");
+			Character pet = FetchNewPet(turn);
+			Console.WriteLine($"You received a new pet:{pet.Name}. Do you want to keep it ? [Y/N]");
 			DisplayPets();
 			if (Console.ReadKey().Key == ConsoleKey.Y)
             {
@@ -128,21 +130,54 @@ namespace Game
 					key = Console.ReadKey().Key;
                 }
 
-                if (characters[(key - ConsoleKey.D0)] is not null && characters[(key - ConsoleKey.D0)].Name == ant.Name)
+                if (characters[(key - ConsoleKey.D0)] is not null && characters[(key - ConsoleKey.D0)].Name == pet.Name)
                 {
 					characters[(key - ConsoleKey.D0)].LevelUp();
-					Console.WriteLine($"You upgraded your {ant.Name}");	
+					Console.WriteLine($"You upgraded your {pet.Name}");	
 
 				}
 				else
                 {
-					characters[(key - ConsoleKey.D0)] = ant;
-					Console.WriteLine($"{ant.Name} was added to your team");
+					characters[(key - ConsoleKey.D0)] = pet;
+					Console.WriteLine($"{pet.Name} was added to your team");
 					DisplayPets();
 				}
 
 				
             }
+			
+        }
+
+		private Character FetchNewPet(int turn)
+        {
+			Random rnd = new Random();
+			Character c;
+            switch (turn)
+            {
+				case 1:
+					c = Game.TIER1[rnd.Next(Game.TIER1.Length)].Clone();
+					break;
+				case 2:
+					c = Game.TIER2[rnd.Next(Game.TIER2.Length)].Clone();
+					break;
+				case 3:
+					c = Game.TIER3[rnd.Next(Game.TIER3.Length)].Clone();
+					break;
+				case 4:
+					c = Game.TIER4[rnd.Next(Game.TIER4.Length)].Clone();
+					break;
+				case 5:
+					c = Game.TIER5[rnd.Next(Game.TIER5.Length)].Clone();
+					break;
+				case 6:
+					c = Game.TIER6[rnd.Next(Game.TIER6.Length)].Clone();
+					break;
+				default:
+					c = Game.ALLPETS[rnd.Next(Game.ALLPETS.Length)].Clone();
+					break;
+			}
+
+			return c;
 			
         }
 

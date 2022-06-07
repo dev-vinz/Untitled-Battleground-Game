@@ -47,13 +47,13 @@ namespace Entities.Characters
 		public int Damage
 		{
 			get { return damage; }
-			protected set { damage = value; }
+			set { damage = value; }
 		}
 
 		public int Health
 		{
 			get { return health; }
-			protected set { health = value; }
+			set { health = value; }
 		}
 
 		public int BattlefieldPosition
@@ -100,6 +100,11 @@ namespace Entities.Characters
 		{
 			return JsonConvert.SerializeObject(this, Formatting.None);
 		}
+
+		public bool IsDead()
+        {
+			return health <= 0;
+        }
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
