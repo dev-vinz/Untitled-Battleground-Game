@@ -38,11 +38,6 @@ namespace Game.Server
 			get { return ip; }
 		}
 
-		public int NbClients
-		{
-			get { return nbClients; }
-		}
-
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -60,8 +55,6 @@ namespace Game.Server
 				this.nbClients = nbClients;
 				this.clients = new Socket[this.nbClients];
 				this.listener = new TcpListener(IPAddress.Parse(ip), TCP_PORT);
-
-				Start();
 			}
 			else
 			{
@@ -73,74 +66,6 @@ namespace Game.Server
 		|*                           PUBLIC METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public void ApplyTurn()
-		{
-			/* Wait for players comp */
-			Thread[] threads = new Thread[nbClients];
-			Character[][] tabCharacters = new Character[nbClients][];
-
-			for (int i = 0; i < nbClients; i++)
-			{
-				threads[i] = new Thread((object? oIndex) =>
-				{
-					if (oIndex is null) return;
-
-					int index = (int)oIndex;
-
-					byte[] tabResponse = new byte[1000];
-					Socket socket = clients[index];
-
-					int nbBytes = socket.Receive(tabResponse);
-					string strCharacters = "";
-
-					/* Transform bytes to JSON string */
-					for (int k = 0; k < nbBytes; k++)
-					{
-						strCharacters += Convert.ToChar(tabResponse[k]);
-					}
-
-					string[]? tabStr = JsonConvert.DeserializeObject<string[]>(strCharacters);
-
-					IEnumerable<JObject>? objects = tabStr?.Select(c => JObject.Parse(c));
-					string?[] characterNames = objects?.Select(o => o.First?.First?.ToString())?.GetNotNullValues() ?? Array.Empty<string>();
-
-					if (characterNames.Length < 1) return;
-
-					tabCharacters[index] = new Character[characterNames.Length];
-
-					for (int k = 0; k < characterNames.Length; k++)
-					{
-						string? name = characterNames[k];
-
-						switch (name)
-						{
-							case Ant.NAME:
-								tabCharacters[index][k] = new Ant();
-								break;
-							default:
-								throw new ArgumentOutOfRangeException(nameof(name), name, null);
-						}
-					}
-
-					Console.WriteLine($"Got {characterNames.Length} pets from Player {index + 1} : {string.Join("; ", characterNames)}");
-				});
-
-				threads[i].Start(i);
-			}
-
-			foreach (Thread thread in threads)
-			{
-				thread.Join();
-			}
-
-			/* Apply turn - Make battle */
-
-			// TODO
-
-			/* Apply turn - Send results to clients */
-			SendResults();
-		}
-
 		public void Stop()
 		{
 			foreach (Socket socket in clients)
@@ -149,23 +74,6 @@ namespace Game.Server
 			}
 
 			listener.Stop();
-		}
-
-		public void WaitForClients()
-		{
-			int clientsConnected = 0;
-
-			Console.WriteLine("Attente des joueurs...");
-
-			while (clientsConnected < nbClients)
-			{
-				Socket socket = listener.AcceptSocket();
-				clients[clientsConnected] = socket;
-
-				clientsConnected++;
-
-				Console.WriteLine($"Joueur {clientsConnected} connecté à la partie");
-			}
 		}
 
 		///https://stackoverflow.com/questions/19387086/how-to-set-up-tcplistener-to-always-listen-and-accept-multiple-connections
@@ -226,7 +134,82 @@ namespace Game.Server
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private void Start()
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                         PROTECTED METHODS                         *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+		protected Character[][] Read()
+		{
+			/* Wait for players comp */
+			Thread[] threads = new Thread[nbClients];
+			Character[][] tabCharacters = new Character[nbClients][];
+
+			for (int i = 0; i < nbClients; i++)
+			{
+				threads[i] = new Thread((object? oIndex) =>
+				{
+					if (oIndex is null) return;
+
+					int index = (int)oIndex;
+
+					byte[] tabResponse = new byte[1000];
+					Socket socket = clients[index];
+
+					int nbBytes = socket.Receive(tabResponse);
+					string strCharacters = "";
+
+					/* Transform bytes to JSON string */
+					for (int k = 0; k < nbBytes; k++)
+					{
+						strCharacters += Convert.ToChar(tabResponse[k]);
+					}
+
+					string[]? tabStr = JsonConvert.DeserializeObject<string[]>(strCharacters);
+
+					IEnumerable<JObject>? objects = tabStr?.Select(c => JObject.Parse(c));
+					string?[] characterNames = objects?.Select(o => o.First?.First?.ToString())?.GetNotNullValues() ?? Array.Empty<string>();
+
+					if (characterNames.Length < 1) return;
+
+					tabCharacters[index] = new Character[characterNames.Length];
+
+					for (int k = 0; k < characterNames.Length; k++)
+					{
+						string? name = characterNames[k];
+
+						switch (name)
+						{
+							case Ant.NAME:
+								tabCharacters[index][k] = new Ant();
+								break;
+							default:
+								throw new ArgumentOutOfRangeException(nameof(name), name, null);
+						}
+					}
+				});
+
+				threads[i].Start(i);
+			}
+
+			foreach (Thread thread in threads)
+			{
+				thread.Join();
+			}
+
+			return tabCharacters;
+		}
+
+		protected void Send()
+		{
+			foreach (Socket socket in clients)
+			{
+				ASCIIEncoding asen = new ASCIIEncoding();
+				socket.Send(asen.GetBytes($"*** SERVER *** : Just sent battle result to {((IPEndPoint?)socket.RemoteEndPoint)?.Address}"));
+			}
+		}
+
+		protected void Start()
 		{
 			try
 			{
@@ -241,20 +224,22 @@ namespace Game.Server
 			}
 		}
 
-		private void SendResults()
+		protected void WaitForClients()
 		{
-			foreach (Socket socket in clients)
+			int clientsConnected = 0;
+
+			Console.WriteLine("Attente des joueurs...");
+
+			while (clientsConnected < nbClients)
 			{
-				ASCIIEncoding asen = new ASCIIEncoding();
-				socket.Send(asen.GetBytes($"*** SERVER *** : Just sent battle result to {((IPEndPoint?)socket.RemoteEndPoint)?.Address}"));
+				Socket socket = listener.AcceptSocket();
+				clients[clientsConnected] = socket;
+
+				clientsConnected++;
+
+				Console.WriteLine($"Joueur {clientsConnected} connecté à la partie");
 			}
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                         PROTECTED METHODS                         *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                              INDEXERS                             *|

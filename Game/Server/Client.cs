@@ -8,9 +8,7 @@ using System.Net.Sockets;
 
 namespace Game.Server
 {
-	/**
-	 * @see https://www.codeproject.com/Articles/1415/Introduction-to-TCP-client-server-in-C
-	 */
+	/// <see cref="https://www.codeproject.com/Articles/1415/Introduction-to-TCP-client-server-in-C"/>
 	public class Client
 	{
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -56,69 +54,6 @@ namespace Game.Server
 			}
 		}
 
-		public void Send(string msgJson)
-		{
-			Stream stm = this.tcpClient.GetStream();
-
-			ASCIIEncoding asen = new ASCIIEncoding();
-			byte[] ba = asen.GetBytes(msgJson);
-			Console.WriteLine("Transmitting.....");
-
-			stm.Write(ba, 0, ba.Length);
-		}
-
-		public bool Read()
-		{
-			Stream stm = this.tcpClient.GetStream();
-
-			byte[] bb = new byte[100];
-			int k = stm.Read(bb, 0, 100);
-
-			for (int i = 0; i < k; i++)
-				Console.Write(Convert.ToChar(bb[i]));
-
-			return false;
-		}
-
-		public void Connect2()
-		{
-			try
-			{
-				TcpClient tcpclnt = new TcpClient();
-				Console.WriteLine("Connecting.....");
-
-				tcpclnt.Connect(this.ip, 8001);
-				// use the ipaddress as in the server program
-
-				Console.WriteLine("Connected");
-				/*
-				Console.Write("Enter the string to be transmitted : ");
-
-				string str = Console.ReadLine();
-				Stream stm = tcpclnt.GetStream();
-
-				ASCIIEncoding asen = new ASCIIEncoding();
-				byte[] ba = asen.GetBytes(str);
-				Console.WriteLine("Transmitting.....");
-
-				stm.Write(ba, 0, ba.Length);
-
-				byte[] bb = new byte[100];
-				int k = stm.Read(bb, 0, 100);
-
-				for (int i = 0; i < k; i++)
-					Console.Write(Convert.ToChar(bb[i]));
-
-				tcpclnt.Close();
-				*/
-			}
-
-			catch (Exception e)
-			{
-				Console.WriteLine("Error..... " + e.StackTrace);
-			}
-		}
-
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -129,7 +64,29 @@ namespace Game.Server
 		|*                         PROTECTED METHODS                         *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		protected bool Read()
+		{
+			Stream stm = tcpClient.GetStream();
 
+			byte[] bytes = new byte[100];
+			int nbBytes = stm.Read(bytes, 0, 100);
+
+			for (int i = 0; i < nbBytes; i++)
+				Console.Write(Convert.ToChar(bytes[i]));
+
+			return false;
+		}
+
+		protected void Send(string msgJson)
+		{
+			Stream stm = tcpClient.GetStream();
+
+			ASCIIEncoding asen = new ASCIIEncoding();
+			byte[] ba = asen.GetBytes(msgJson);
+			Console.WriteLine("Transmitting.....");
+
+			stm.Write(ba, 0, ba.Length);
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                              INDEXERS                             *|

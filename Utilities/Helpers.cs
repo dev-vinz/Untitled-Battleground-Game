@@ -19,7 +19,7 @@ namespace Utilities
 			while (Console.KeyAvailable)
 			{
 				nb++;
-				Console.ReadKey(false);
+				Console.ReadKey(true);
 			}
 
 			return nb;

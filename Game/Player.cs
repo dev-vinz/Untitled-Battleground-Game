@@ -21,9 +21,6 @@ namespace Game
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		private readonly Character[] characters;
-
-		private readonly Game game;
-
 		private int health;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -53,7 +50,6 @@ namespace Game
 		{
 			characters = new Character[NB_CHARACTERS];
 			health = MAX_HEALTH;
-
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -98,11 +94,11 @@ namespace Game
 		public void PlayGame()
         {
             while(!IsDead())
-            {
-				Console.WriteLine($"You have {health}HP left");
-				UpdateTeam();
-
+			{
 				Helpers.ClearConsoleBuffer();
+				Console.WriteLine($"You have {health}HP left");
+
+				UpdateTeam();
 				Send(SerializedCharacters);
 
 				bool won = Read();

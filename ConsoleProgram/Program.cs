@@ -31,7 +31,7 @@ namespace ConsoleProgram
 
 		private static void RunServer()
 		{
-			Server server = new Server(2);
+			Game.Game game = new Game.Game(1);
 
 			Thread thClient = new Thread((object data) =>
 			{
@@ -49,23 +49,23 @@ namespace ConsoleProgram
 				}
 			});
 
-			Thread thServer = new Thread((object data) =>
+			Thread thGame = new Thread((object data) =>
 			{
-				if (data is not Server server) return;
+				if (data is not Game.Game game) return;
 
-				server.WaitForClients();
+				game.Start();
 
 				Console.WriteLine("Le jeu démarre");
 
 				while (true)
 				{
 					Console.WriteLine("*** SERVER ***");
-					server.ApplyTurn();
+					game.ApplyTurn();
 				}
 			});
 
-			thServer.Start(server);
-			thClient.Start(server);			
+			thGame.Start(game);
+			thClient.Start(game);
 		}
 	}
 }
