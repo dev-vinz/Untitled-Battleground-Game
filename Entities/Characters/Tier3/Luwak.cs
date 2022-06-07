@@ -40,7 +40,16 @@ namespace Entities.Characters.Tier2
 
 		public override Character Clone()
 		{
-			throw new NotImplementedException();
+			return new Luwak
+			{
+				Ability = Ability,
+				BattlefieldPosition = BattlefieldPosition,
+				Damage = Damage,
+				Health = Health,
+				Level = Level,
+				Name = Name,
+				Tier = Tier,
+			};
 		}
 
 		/// <summary>

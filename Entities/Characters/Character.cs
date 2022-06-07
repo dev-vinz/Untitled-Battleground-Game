@@ -71,6 +71,7 @@ namespace Entities.Characters
 		public int Level
 		{
 			get { return level; }
+			protected set { level = value; }
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

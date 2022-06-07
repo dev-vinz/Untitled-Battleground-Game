@@ -40,7 +40,16 @@ namespace Entities.Characters.Tier5
 
 		public override Character Clone()
 		{
-			throw new NotImplementedException();
+			return new Parrot
+			{
+				Ability = Ability,
+				BattlefieldPosition = BattlefieldPosition,
+				Damage = Damage,
+				Health = Health,
+				Level = Level,
+				Name = Name,
+				Tier = Tier,
+			};
 		}
 
 		/// <summary>

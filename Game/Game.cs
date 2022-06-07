@@ -1,9 +1,13 @@
 ﻿using Entities.Characters;
 using Entities.Characters.Tier1;
+<<<<<<< HEAD
 using Entities.Characters.Tier2;
 using Entities.Characters.Tier4;
 using Entities.Characters.Tier5;
 using Entities.Characters.Tier6;
+=======
+using Game.Phase;
+>>>>>>> 6bd1e8e (Clone Methods)
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,6 +36,7 @@ namespace Game
         |*                               FIELDS                              *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		private Character[][]? allCharacters;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                             PROPERTIES                            *|
@@ -53,12 +58,12 @@ namespace Game
 
 		public void ApplyTurn()
 		{
-			Character[][] allCharacters = Read();
+			allCharacters = Read();
 
 			Console.WriteLine($"Got all characters !");
 
 			/* Apply turn - Make battle */
-			int nbBattles = allCharacters.Length;
+			Battle[] battles = CreateBattles();
 
 			/* Apply turn - Send results to clients */
 			Send();
@@ -75,7 +80,33 @@ namespace Game
         |*                          PRIVATE METHODS                          *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		private Battle[] CreateBattles()
+		{
+			if (allCharacters is null) throw new ArgumentNullException(nameof(allCharacters));
 
+			Battle[] battles = new Battle[allCharacters.Length];
+
+			for (int k = 0; k < allCharacters.Length; k++)
+			{
+				int rnd;
+
+				do
+				{
+					rnd = new Random().Next(allCharacters.Length);
+				} while (rnd == k);
+
+<<<<<<< HEAD
+=======
+				Character[] playerOne = allCharacters[k];
+				Character[] playerTwo = allCharacters[rnd];
+
+				battles[k] = new Battle(playerOne, playerTwo);
+			}
+
+			return battles;
+		}
+
+>>>>>>> 6bd1e8e (Clone Methods)
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                         PROTECTED METHODS                         *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
