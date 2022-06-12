@@ -81,60 +81,6 @@ namespace Game.Server
 			listener.Stop();
 		}
 
-		///https://stackoverflow.com/questions/19387086/how-to-set-up-tcplistener-to-always-listen-and-accept-multiple-connections
-		private void StartListening()
-		{
-			try
-			{
-
-				int i = 0;
-				while (true)
-				{
-					if (i < this.nbClients)
-					{
-						Console.WriteLine("Waiting for a connection.....");
-						Socket s = listener.AcceptSocket();
-						i++;
-
-						Console.WriteLine(i);
-						Console.WriteLine("Connection accepted from " + s.RemoteEndPoint);
-
-						var childSocketThread = new Thread(() =>
-						{
-
-							byte[] b = new byte[100];
-
-							int k = s.Receive(b);
-							Console.WriteLine("Recieved...");
-							for (int i = 0; i < k; i++)
-								Console.Write(Convert.ToChar(b[i]));
-
-							ASCIIEncoding asen = new ASCIIEncoding();
-							s.Send(asen.GetBytes("The string was recieved by the server."));
-							Console.WriteLine("\nSent Acknowledgement");
-
-							/* clean up */
-							s.Close();
-							i--;
-							listener.Stop();
-
-						});
-
-						childSocketThread.Start();
-					}
-					else
-					{
-						Console.WriteLine("Number of clients reached");
-						break;
-					}
-				}
-			}
-			catch (Exception e)
-			{
-				Console.WriteLine("Error..... " + e.StackTrace);
-			}
-		}
-
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -205,7 +151,7 @@ namespace Game.Server
 							Parrot.NAME => Character.Parse<Parrot>(tabStr?[k]),
 							Porcupine.NAME => Character.Parse<Beaver>(tabStr?[k]),
 
-							Lucane.NAME => Character.Parse<Lucane>(tabStr?[k]),
+							Beetle.NAME => Character.Parse<Beetle>(tabStr?[k]),
 							Penguin.NAME => Character.Parse<Penguin>(tabStr?[k]),
 
 							_ => throw new ArgumentOutOfRangeException(nameof(name), name, null),
@@ -239,8 +185,8 @@ namespace Game.Server
 			{
 				listener.Start();
 
-				Console.WriteLine($"The server is running at port {TCP_PORT}...");
-				Console.WriteLine("The local End point is  :\t" + listener.LocalEndpoint);
+				//Console.WriteLine($"The server is running at port {TCP_PORT}...");
+				//Console.WriteLine("The local End point is  :\t" + listener.LocalEndpoint);
 			}
 			catch (Exception)
 			{
@@ -252,7 +198,7 @@ namespace Game.Server
 		{
 			int clientsConnected = 0;
 
-			Console.WriteLine("Attente des joueurs...");
+			//Console.WriteLine("Attente des joueurs...");
 
 			while (clientsConnected < nbClients)
 			{
@@ -261,7 +207,7 @@ namespace Game.Server
 
 				clientsConnected++;
 
-				Console.WriteLine($"Joueur {clientsConnected} connecté à la partie");
+				//Console.WriteLine($"Joueur {clientsConnected} connecté à la partie");
 			}
 		}
 

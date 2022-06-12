@@ -32,6 +32,8 @@ namespace Entities.Characters
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		protected abstract string Emoji { get; }
+
 		public string Name
 		{
 			get { return name; }
@@ -86,6 +88,47 @@ namespace Entities.Characters
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                           PUBLIC METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+		public void DisplayConsole()
+		{
+			const int PLACE_TAKEN = 10;
+
+			(int oldLeft, int initialTop) = Console.GetCursorPosition();
+
+			int position = PLACE_TAKEN * (4 - battlefieldPosition) + 1;
+
+			Console.SetCursorPosition(position, initialTop);
+
+			int nbSurroundName = (PLACE_TAKEN - name.Length) / 2;
+			string strName = " ";
+
+			for (int k = 0; k < nbSurroundName; k++) strName += " ";
+			strName += name;
+			for (int k = 0; k < nbSurroundName; k++) strName += " ";
+
+			Console.Write(strName);
+
+			Console.SetCursorPosition(position, initialTop + 1);
+
+			Console.Write($"  {damage:#00}   {health:#00} ");
+
+			Console.SetCursorPosition(position, initialTop + 2);
+
+			int nbSurroundLevel = (PLACE_TAKEN - level) / 2;
+			string strLevel = " ";
+
+			for (int k = 0; k < nbSurroundLevel; k++) strLevel += " ";
+			for (int k = 0; k < level; k++) strLevel += "*";
+			for (int k = 0; k < nbSurroundLevel; k++) strLevel += " ";
+
+			Console.Write(strLevel);
+
+			Console.SetCursorPosition(position, initialTop + 3);
+
+			Console.Write($"    ({battlefieldPosition})   ");
+
+			Console.SetCursorPosition(oldLeft, initialTop);
+		}
 
 		public bool LevelUp(int level = 1)
 		{

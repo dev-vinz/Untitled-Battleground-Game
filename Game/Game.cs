@@ -23,20 +23,12 @@ namespace Game
 {
 	public class Game : Server.Server
 	{
-		public static Character[] TIER1 = { new Ant(), new Beaver(), new Mosquito() };
-		public static Character[] TIER2 = { new Crab(), new Shrimp(), new Toucan() };
-		public static Character[] TIER3 = { new Blowfish(), new Horse(), new Luwak() };
-		public static Character[] TIER4 = { new Giraffe(), new Otter(), new Ox() };
-		public static Character[] TIER5 = { new Crocodile(), new Parrot(), new Porcupine() };
-		public static Character[] TIER6 = { new Lucane(), new Penguin() };
-		public static Character[] ALLPETS = TIER1.Concat(TIER2).Concat(TIER3).Concat(TIER4).Concat(TIER5).Concat(TIER6).ToArray();
-
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                               FIELDS                              *|
         \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		private Character[][]? allCharacters;
-		private bool[] tabWinners;
+		private readonly BattleResult[] tabResults;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
         |*                             PROPERTIES                            *|
@@ -50,7 +42,7 @@ namespace Game
 
 		public Game(int nbClients) : base(nbClients)
 		{
-			tabWinners = new bool[nbClients];
+			tabResults = new BattleResult[nbClients];
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -75,7 +67,7 @@ namespace Game
 
 					battle.Start();
 					battle.Run();
-					tabWinners[battle.Id] = battle.PlayerWon;
+					tabResults[battle.Id] = battle.PlayerResult;
 				});
 
 				threads[k].Start(battles[k]);

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Entities.Characters.Tier6
 {
-	public class Lucane : Character
+	public class Beetle : Character
 	{
 		public const string NAME = "Lucane";
 
@@ -21,13 +21,13 @@ namespace Entities.Characters.Tier6
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-
+		protected override string Emoji => "🪲";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Lucane()
+		public Beetle()
 		{
 			Name = NAME;
 			Tier = 5;
@@ -38,7 +38,7 @@ namespace Entities.Characters.Tier6
 
 		public override Character Clone()
 		{
-			return new Lucane
+			return new Beetle
 			{
 				Ability = Ability,
 				BattlefieldPosition = BattlefieldPosition,

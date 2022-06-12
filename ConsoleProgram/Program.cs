@@ -3,6 +3,8 @@ using Entities.Characters.Tier1;
 using Game;
 using Game.Server;
 using System;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace ConsoleProgram
@@ -41,12 +43,10 @@ namespace ConsoleProgram
 
 				player.Connect();
 
-				while (true)
-				{
-					Console.WriteLine("*** PLAYER ***");
+				player.Add(new Ant(), 0);
+				player.Add(new Mosquito(), 1);
 
-					player.PlayGame();
-				}
+				player.PlayTurn();
 			});
 
 			Thread thGame = new Thread((object data) =>
@@ -55,11 +55,11 @@ namespace ConsoleProgram
 
 				game.Start();
 
-				Console.WriteLine("Le jeu démarre");
+				//Console.WriteLine("Le jeu démarre");
 
 				while (true)
 				{
-					Console.WriteLine("*** SERVER ***");
+					//Console.WriteLine("*** SERVER ***");
 					game.ApplyTurn();
 				}
 			});

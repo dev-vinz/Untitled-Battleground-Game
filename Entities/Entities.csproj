@@ -13,7 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Characters\Tier6\" />
     <Folder Include="Characters\Tier5\" />
     <Folder Include="Characters\Tier4\" />
     <Folder Include="Characters\Tier3\" />

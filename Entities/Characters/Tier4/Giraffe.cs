@@ -21,7 +21,7 @@ namespace Entities.Characters.Tier4
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-
+		protected override string Emoji => "🦒";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|

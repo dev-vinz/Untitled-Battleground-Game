@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,9 +21,70 @@ namespace Battleground
 	/// </summary>
 	public partial class MainWindow : Window
 	{
+		[DllImport("Kernel32")]
+		public static extern void AllocConsole();
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                               FIELDS                              *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                             PROPERTIES                            *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                            CONSTRUCTORS                           *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
 		public MainWindow()
 		{
 			InitializeComponent();
+
+			AllocConsole();
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                          PRIVATE METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                         PROTECTED METHODS                         *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                          STATIC METHODS                           *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                         ABSTRACT METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                              INDEXERS                             *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                         OPERATORS OVERLOAD                        *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 	}
 }

@@ -1,5 +1,7 @@
-﻿using Entities.Characters;
+﻿using Entities.Abilities;
+using Entities.Characters;
 using Entities.Characters.Tier1;
+using Game.Phase;
 using Game.Server;
 using Newtonsoft.Json;
 using System;
@@ -22,6 +24,7 @@ namespace Game
 
 		private readonly Character[] characters;
 		private int health;
+		private int currentTurn;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
@@ -53,6 +56,7 @@ namespace Game
 		{
 			characters = new Character[NB_CHARACTERS];
 			health = MAX_HEALTH;
+			currentTurn = 0;
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -63,11 +67,65 @@ namespace Game
 		{
 			// Assumption, position is valid
 			characters[position] = character;
+			character.BattlefieldPosition = position;
+
+			character.LevelUp(8);
 		}
 
 		public void EndTurn()
 		{
-			UpdateCharactersAbilities();
+			
+		}
+
+		public void PlayTurn()
+		{
+			#region StartOfTurn Ability
+
+			foreach (Character character in characters.Where(c => c is not null && c.Ability == Ability.StartOfTurn))
+			{
+				OnStartOfTurn((StartOfTurnEventArgs)character.TriggerAbility());
+			}
+
+			#endregion
+
+			DisplayInformations();
+
+			Character newCharacter = Shop.GetNewCharacter(currentTurn);
+
+			UpdateCharacter();
+			HandleNewCharacter(newCharacter);
+
+			#region EndOfTurn Ability
+			#endregion
+
+			Send(SerializedCharacters);
+
+			BattleHistoric battle = Read();
+
+			if (battle.Result == BattleResult.Loose) health--;
+
+			DisplayBattle(battle);
+
+			currentTurn++;
+		}
+
+		public void PlayGame()
+		{
+			int turn = 1;
+
+			while (IsAlive)
+			{
+				Helpers.ClearConsoleBuffer();
+				Console.WriteLine($"You have {health}HP left");
+
+				UpdateTeam(turn);
+				Send(SerializedCharacters);
+
+				bool won = Read2();
+
+				if (!won) health--;
+				turn++;
+			}
 		}
 
 		public void Remove(Character character)
@@ -84,126 +142,115 @@ namespace Game
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private void UpdateCharactersAbilities()
+		private void DisplayBattle(BattleHistoric battle)
+		{
+			Console.WriteLine("Fin du tour...");
+			Console.ReadLine();
+		}
+
+		private void DisplayInformations()
+		{
+			Console.WriteLine($"\t-- HP : {health}/{MAX_HEALTH}\t Turn : {currentTurn} --");
+			Console.WriteLine();
+
+			foreach (Character character in characters)
+			{
+				if (character == null) continue;
+
+				character.DisplayConsole();
+			}
+
+			Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 4);
+			Console.WriteLine();
+
+			Console.WriteLine("Pressez enter pour continuer...");
+			Console.ReadLine();
+		}
+
+		private void HandleNewCharacter(Character character)
 		{
 
 		}
 
-		public void PlayGame()
-        {
-			int turn = 1;
+		private void OnStartOfTurn(StartOfTurnEventArgs e)
+		{
+			if (e.Side == Side.Opponent) return;
 
-            while(IsAlive)
-			{
-				Helpers.ClearConsoleBuffer();
-				Console.WriteLine($"You have {health}HP left");
+			int target = e.TargetPosition >= characters.Length ? characters.Length - 1 : e.TargetPosition;
 
-				UpdateTeam(turn);
-				Send(SerializedCharacters);
+			Character character = characters[target];
 
-				bool won = Read();
+			if (character is null || character.IsDead) return;
 
-				if (!won) health--;
-				turn++;
-            }
-        }
+			character.Health += e.HealthGiven;
+			character.Damage += e.AttackGiven;
+		}
+
+		private void UpdateCharacter()
+		{
+
+		}
 
 		private void UpdateTeam(int turn)
-        {
+		{
 			ObtainNewPet(turn);
 			LevelUpPet();
-        }
+		}
 
 		private void ObtainNewPet(int turn)
-        {
-			Character pet = FetchNewPet(turn);
+		{
+			Character pet = Shop.GetNewCharacter(turn);
 			Console.WriteLine($"You received a new pet:{pet.Name}. Do you want to keep it ? [Y/N]");
 			DisplayPets();
 			if (Console.ReadKey().Key == ConsoleKey.Y)
-            {
-				Console.WriteLine($"Where do you want to place it ? [0-{NB_CHARACTERS-1}/N]");
+			{
+				Console.WriteLine($"Where do you want to place it ? [0-{NB_CHARACTERS - 1}/N]");
 				ConsoleKey key = Console.ReadKey().Key;
-				while(key < ConsoleKey.D0 || key > (ConsoleKey)(NB_CHARACTERS + (int)ConsoleKey.D0))
-                {
+				while (key < ConsoleKey.D0 || key > (ConsoleKey)(NB_CHARACTERS + (int)ConsoleKey.D0))
+				{
 					Console.WriteLine("Incorrect index");
 					key = Console.ReadKey().Key;
-                }
+				}
 
-                if (characters[(key - ConsoleKey.D0)] is not null && characters[(key - ConsoleKey.D0)].Name == pet.Name)
-                {
+				if (characters[(key - ConsoleKey.D0)] is not null && characters[(key - ConsoleKey.D0)].Name == pet.Name)
+				{
 					characters[(key - ConsoleKey.D0)].LevelUp();
-					Console.WriteLine($"You upgraded your {pet.Name}");	
+					Console.WriteLine($"You upgraded your {pet.Name}");
 
 				}
 				else
-                {
+				{
 					characters[(key - ConsoleKey.D0)] = pet;
 					Console.WriteLine($"{pet.Name} was added to your team");
 					DisplayPets();
 				}
-
-				
-            }
-			
-        }
-
-		private Character FetchNewPet(int turn)
-        {
-			Random rnd = new Random();
-			Character c;
-            switch (turn)
-            {
-				case 1:
-					c = Game.TIER1[rnd.Next(Game.TIER1.Length)].Clone();
-					break;
-				case 2:
-					c = Game.TIER2[rnd.Next(Game.TIER2.Length)].Clone();
-					break;
-				case 3:
-					c = Game.TIER3[rnd.Next(Game.TIER3.Length)].Clone();
-					break;
-				case 4:
-					c = Game.TIER4[rnd.Next(Game.TIER4.Length)].Clone();
-					break;
-				case 5:
-					c = Game.TIER5[rnd.Next(Game.TIER5.Length)].Clone();
-					break;
-				case 6:
-					c = Game.TIER6[rnd.Next(Game.TIER6.Length)].Clone();
-					break;
-				default:
-					c = Game.ALLPETS[rnd.Next(Game.ALLPETS.Length)].Clone();
-					break;
 			}
-
-			return c;
-			
-        }
+		}
 
 		private void LevelUpPet()
-        {
+		{
 			//Check character level	
 			Console.WriteLine($"Please choose a pet to upgrade [[0-{NB_CHARACTERS - 1}]");
 			ConsoleKey key = Console.ReadKey().Key;
 			if (key >= ConsoleKey.D0 && key <= (ConsoleKey)(NB_CHARACTERS + (int)ConsoleKey.D0))
 			{
-                if (characters[key - ConsoleKey.D0] is not null)
-                {
+				if (characters[key - ConsoleKey.D0] is not null)
+				{
 					characters[key - ConsoleKey.D0].LevelUp();
 				}
 			}
 		}
 
 		private void DisplayPets()
-        {
+		{
 			int i = 0;
-			foreach(Character c in characters)
-            {
-				if(c is null) { i++; continue; }
+			foreach (Character c in characters)
+			{
+				if (c is null) { i++; continue; }
 				Console.Write($"{c.Name} lvl{c.Level} [{i++}]");
-            }
+			}
 			Console.WriteLine();
-        }
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                         PROTECTED METHODS                         *|

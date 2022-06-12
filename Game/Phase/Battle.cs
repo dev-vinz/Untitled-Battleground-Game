@@ -23,12 +23,12 @@ namespace Game.Phase
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-		
-		private bool IsEnded => playerOne.Any(c => c is not null && c.IsAlive) && playerOne.Any(c => c is not null && c.IsAlive);
+
+		private bool IsEnded => playerOne.Any(c => c is not null && c.IsAlive) && playerTwo.Any(c => c is not null && c.IsAlive);
 
 
 		public int Id => battleId;
-		public bool PlayerWon { get; private set; }
+		public BattleResult PlayerResult { get; private set; }
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -101,7 +101,9 @@ namespace Game.Phase
 				#endregion
 			}
 
-			PlayerWon = playerOne.Any(c => c.IsAlive);
+			PlayerResult = playerOne.Any(c => c.IsAlive) && playerTwo.All(c => c.IsDead) ? BattleResult.Win :
+							playerOne.All(c => c.IsDead) && playerTwo.Any(c => c.IsAlive) ? BattleResult.Loose :
+							BattleResult.Tie;
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -112,7 +114,9 @@ namespace Game.Phase
 		{
 			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
 
-			Character character = targetPlayer[e.TargetPosition];
+			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+
+			Character character = targetPlayer[target];
 
 			if (character is null || character.IsDead) return;
 
@@ -126,7 +130,9 @@ namespace Game.Phase
 		{
 			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
 
-			Character character = targetPlayer[e.TargetPosition];
+			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+
+			Character character = targetPlayer[target];
 
 			if (character is null || character.IsDead) return;
 
@@ -140,7 +146,9 @@ namespace Game.Phase
 		{
 			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
 
-			Character character = targetPlayer[e.TargetPosition];
+			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+
+			Character character = targetPlayer[target];
 
 			if (character is null || character.IsDead) return;
 

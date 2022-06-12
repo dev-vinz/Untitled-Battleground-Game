@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
+using Game.Phase;
 
 namespace Game.Server
 {
@@ -64,7 +65,12 @@ namespace Game.Server
 		|*                         PROTECTED METHODS                         *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		protected bool Read()
+		protected BattleHistoric Read()
+		{
+			return null;
+		}
+
+		protected bool Read2()
 		{
 			Stream stm = tcpClient.GetStream();
 
