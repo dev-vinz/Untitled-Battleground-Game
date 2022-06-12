@@ -6,10 +6,13 @@ using Game.Server;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
+
+#nullable enable
 
 namespace Game
 {
@@ -68,17 +71,19 @@ namespace Game
 			// Assumption, position is valid
 			characters[position] = character;
 			character.BattlefieldPosition = position;
-
-			character.LevelUp(8);
-		}
-
-		public void EndTurn()
-		{
-			
 		}
 
 		public void PlayTurn()
 		{
+			#region Restore old characters
+
+			foreach (Character c in characters)
+			{
+				c?.Restore();
+			}
+
+			#endregion
+
 			#region StartOfTurn Ability
 
 			foreach (Character character in characters.Where(c => c is not null && c.Ability == Ability.StartOfTurn))
@@ -98,6 +103,17 @@ namespace Game
 			#region EndOfTurn Ability
 			#endregion
 
+			#region Save characters
+
+			foreach (Character c in characters)
+			{
+				c?.Save();
+			}
+
+			#endregion
+
+			Console.WriteLine(">> End of turn... please wait for other players... <<");
+
 			Send(SerializedCharacters);
 
 			BattleHistoric battle = Read();
@@ -109,33 +125,9 @@ namespace Game
 			currentTurn++;
 		}
 
-		public void PlayGame()
-		{
-			int turn = 1;
-
-			while (IsAlive)
-			{
-				Helpers.ClearConsoleBuffer();
-				Console.WriteLine($"You have {health}HP left");
-
-				UpdateTeam(turn);
-				Send(SerializedCharacters);
-
-				bool won = Read2();
-
-				if (!won) health--;
-				turn++;
-			}
-		}
-
 		public void Remove(Character character)
 		{
 			// Assumption, character is valid
-		}
-
-		public void StartTurn()
-		{
-
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -150,6 +142,8 @@ namespace Game
 
 		private void DisplayInformations()
 		{
+			Console.Clear();
+
 			Console.WriteLine($"\t-- HP : {health}/{MAX_HEALTH}\t Turn : {currentTurn} --");
 			Console.WriteLine();
 
@@ -162,14 +156,70 @@ namespace Game
 
 			Console.SetCursorPosition(Console.CursorLeft, Console.CursorTop + 4);
 			Console.WriteLine();
-
-			Console.WriteLine("Pressez enter pour continuer...");
-			Console.ReadLine();
 		}
 
 		private void HandleNewCharacter(Character character)
 		{
+			ConsoleKey key;
+			int nbCharacters = characters.Length;
 
+			Console.WriteLine();
+			Console.WriteLine($"You received a new pet : {character.Name} ({character.Damage}/{character.Health})");
+
+			do
+			{
+				Console.Write("Do you want to keep it [Y/N] ? ");
+				key = Console.ReadKey().Key;
+				Console.WriteLine();
+			} while (key != ConsoleKey.Y && key != ConsoleKey.N);
+
+			if (key == ConsoleKey.Y)
+			{
+				do
+				{
+					Console.Write($"Where do you want to place it [1 - {nbCharacters}] ? ");
+
+					key = Console.ReadKey().Key;
+					Console.WriteLine();
+				} while (key < ConsoleKey.D1 || key > (ConsoleKey)(nbCharacters + (int)ConsoleKey.D1));
+				
+				int index = key - ConsoleKey.D1;
+				bool isAdded = false;
+
+				// Add to the team
+				if (characters[index] is null)
+				{
+					Add(character, index);
+					isAdded = true;
+				}
+				// Update existant character
+				else if (characters[index] is not null && characters[index].Name == character.Name)
+				{
+					characters[index].LevelUp();
+				}
+				// ERROR - Restart handler
+				else
+				{
+					Console.WriteLine("[ERROR] There is already a character at this index");
+					HandleNewCharacter(character);
+					return;
+				}
+
+				DisplayInformations();
+
+				if (isAdded)
+				{
+					Console.WriteLine($">>> Your brand new {character.Name} has been added ! <<<");
+				}
+				else
+				{
+					Console.WriteLine($"> Your {character.Name} has been leveled up ! <");
+				}
+			}
+			else
+			{
+				Console.WriteLine("> This brand new character has not been added to your team <");
+			}
 		}
 
 		private void OnStartOfTurn(StartOfTurnEventArgs e)
@@ -188,68 +238,36 @@ namespace Game
 
 		private void UpdateCharacter()
 		{
+			int nbCharacters = characters.Count(c => c is not null);
 
-		}
+			Character? character = null;
+			ConsoleKey key;
 
-		private void UpdateTeam(int turn)
-		{
-			ObtainNewPet(turn);
-			LevelUpPet();
-		}
-
-		private void ObtainNewPet(int turn)
-		{
-			Character pet = Shop.GetNewCharacter(turn);
-			Console.WriteLine($"You received a new pet:{pet.Name}. Do you want to keep it ? [Y/N]");
-			DisplayPets();
-			if (Console.ReadKey().Key == ConsoleKey.Y)
+			do
 			{
-				Console.WriteLine($"Where do you want to place it ? [0-{NB_CHARACTERS - 1}/N]");
-				ConsoleKey key = Console.ReadKey().Key;
-				while (key < ConsoleKey.D0 || key > (ConsoleKey)(NB_CHARACTERS + (int)ConsoleKey.D0))
-				{
-					Console.WriteLine("Incorrect index");
-					key = Console.ReadKey().Key;
-				}
+				Console.WriteLine();
+				Console.Write($"Please choose a pet to upgrade [1 - {nbCharacters}] : ");
 
-				if (characters[(key - ConsoleKey.D0)] is not null && characters[(key - ConsoleKey.D0)].Name == pet.Name)
-				{
-					characters[(key - ConsoleKey.D0)].LevelUp();
-					Console.WriteLine($"You upgraded your {pet.Name}");
+				key = Console.ReadKey().Key;
+				int index = key - ConsoleKey.D1;
 
-				}
-				else
-				{
-					characters[(key - ConsoleKey.D0)] = pet;
-					Console.WriteLine($"{pet.Name} was added to your team");
-					DisplayPets();
-				}
-			}
-		}
+				if (index < characters.Length) character = characters[key - ConsoleKey.D1];
+			} while (key < ConsoleKey.D1 || key > (ConsoleKey)(nbCharacters + (int)ConsoleKey.D1) || character?.Level >= 9);
 
-		private void LevelUpPet()
-		{
-			//Check character level	
-			Console.WriteLine($"Please choose a pet to upgrade [[0-{NB_CHARACTERS - 1}]");
-			ConsoleKey key = Console.ReadKey().Key;
-			if (key >= ConsoleKey.D0 && key <= (ConsoleKey)(NB_CHARACTERS + (int)ConsoleKey.D0))
+			if (character is null) return;
+
+			bool leveledUp = character.LevelUp();
+
+			DisplayInformations();
+
+			if (leveledUp)
 			{
-				if (characters[key - ConsoleKey.D0] is not null)
-				{
-					characters[key - ConsoleKey.D0].LevelUp();
-				}
+				Console.WriteLine($">>> Your {character.Name} is now level {character.Level % 3} ! <<<");
 			}
-		}
-
-		private void DisplayPets()
-		{
-			int i = 0;
-			foreach (Character c in characters)
+			else
 			{
-				if (c is null) { i++; continue; }
-				Console.Write($"{c.Name} lvl{c.Level} [{i++}]");
+				Console.WriteLine($"> Your {character.Name} is now level {(character.Level):#0.0} <");
 			}
-			Console.WriteLine();
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

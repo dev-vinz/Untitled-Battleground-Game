@@ -27,14 +27,16 @@ namespace Entities.Characters.Tier4
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Ox()
+		public Ox() : base(4, 10)
 		{
 			Name = NAME;
 			Tier = 4;
-			Damage = 4;
-			Health = 10;
 			Ability = Ability.Hurt;
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		public override Character Clone()
 		{
@@ -72,11 +74,6 @@ namespace Entities.Characters.Tier4
 				HealthReduced = 0,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

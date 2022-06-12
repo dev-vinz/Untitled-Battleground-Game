@@ -27,14 +27,16 @@ namespace Entities.Characters.Tier5
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Porcupine()
+		public Porcupine() : base(1, 15)
 		{
 			Name = NAME;
 			Tier = 5;
-			Damage = 1;
-			Health = 15;
 			Ability = Ability.StartOfBattle;
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		public override Character Clone()
 		{
@@ -66,11 +68,6 @@ namespace Entities.Characters.Tier5
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

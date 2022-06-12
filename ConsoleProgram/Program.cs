@@ -27,8 +27,6 @@ namespace ConsoleProgram
 		{
 			Player p = new Player("157.26.104.10");
 			p.Connect();
-
-			p.PlayGame();
 		}
 
 		private static void RunServer()

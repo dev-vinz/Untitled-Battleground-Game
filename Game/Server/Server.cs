@@ -58,8 +58,9 @@ namespace Game.Server
 			{
 				this.ip = ip;
 				this.nbClients = nbClients;
-				this.clients = new Socket[this.nbClients];
-				this.listener = new TcpListener(IPAddress.Parse(ip), TCP_PORT);
+
+				clients = new Socket[this.nbClients];
+				listener = new TcpListener(IPAddress.Parse(ip), TCP_PORT);
 			}
 			else
 			{

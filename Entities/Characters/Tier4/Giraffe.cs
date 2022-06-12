@@ -27,14 +27,16 @@ namespace Entities.Characters.Tier4
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Giraffe()
+		public Giraffe() : base(8, 6)
 		{
 			Name = NAME;
 			Tier = 4;
-			Damage = 8;
-			Health = 6;
 			Ability = Ability.StartOfTurn;
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		public override Character Clone()
 		{
@@ -66,11 +68,6 @@ namespace Entities.Characters.Tier4
 				HealthGiven = 2 * Level,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

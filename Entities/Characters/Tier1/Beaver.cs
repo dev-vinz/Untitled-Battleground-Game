@@ -27,14 +27,16 @@ namespace Entities.Characters.Tier1
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Beaver()
+		public Beaver() : base(2, 2)
 		{
 			Name = NAME;
 			Tier = 1;
-			Damage = 2;
-			Health = 2;
 			Ability = Ability.StartOfBattle;
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		public override Character Clone()
 		{
@@ -73,11 +75,6 @@ namespace Entities.Characters.Tier1
 				HealthReduced = 0,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

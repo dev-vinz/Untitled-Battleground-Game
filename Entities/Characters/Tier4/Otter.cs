@@ -27,14 +27,16 @@ namespace Entities.Characters.Tier4
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Otter()
+		public Otter() : base(6, 8)
 		{
 			Name = NAME;
 			Tier = 4;
-			Damage = 6;
-			Health = 8;
 			Ability = Ability.Faint;
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		public override Character Clone()
 		{
@@ -69,11 +71,6 @@ namespace Entities.Characters.Tier4
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|

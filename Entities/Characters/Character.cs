@@ -28,6 +28,9 @@ namespace Entities.Characters
 
 		private int level = 1;
 
+		private int backupDamage;
+		private int backupHealth;
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -84,6 +87,14 @@ namespace Entities.Characters
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		protected Character(int damage, int health)
+		{
+			this.damage = damage;
+			this.health = health;
+			
+			backupDamage = damage;
+			backupHealth = health;
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                           PUBLIC METHODS                          *|
@@ -125,7 +136,7 @@ namespace Entities.Characters
 
 			Console.SetCursorPosition(position, initialTop + 3);
 
-			Console.Write($"    ({battlefieldPosition})   ");
+			Console.Write($"    ({battlefieldPosition + 1})   ");
 
 			Console.SetCursorPosition(oldLeft, initialTop);
 		}
@@ -138,6 +149,18 @@ namespace Entities.Characters
 			health += level;
 
 			return this.level % 3 == 0;
+		}
+
+		public void Restore()
+		{
+			damage = backupDamage;
+			health = backupHealth;
+		}
+
+		public void Save()
+		{
+			backupDamage = damage;
+			backupHealth = health;
 		}
 
 		/// <summary>

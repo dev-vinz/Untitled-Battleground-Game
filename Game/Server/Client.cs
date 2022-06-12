@@ -88,10 +88,9 @@ namespace Game.Server
 			Stream stm = tcpClient.GetStream();
 
 			ASCIIEncoding asen = new ASCIIEncoding();
-			byte[] ba = asen.GetBytes(msgJson);
-			Console.WriteLine("Transmitting.....");
+			byte[] bytes = asen.GetBytes(msgJson);
 
-			stm.Write(ba, 0, ba.Length);
+			stm.Write(bytes, 0, bytes.Length);
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

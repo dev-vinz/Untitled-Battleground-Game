@@ -27,12 +27,10 @@ namespace Entities.Characters.Tier6
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Beetle()
+		public Beetle() : base(3, 5)
 		{
 			Name = NAME;
 			Tier = 5;
-			Damage = 3;
-			Health = 5;
 			Ability = Ability.Hurt;
 		}
 
@@ -49,6 +47,10 @@ namespace Entities.Characters.Tier6
 				Tier = Tier,
 			};
 		}
+
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                           PUBLIC METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		/// <summary>
 		/// Give his Health to an random ally
@@ -73,11 +75,6 @@ namespace Entities.Characters.Tier6
 				HealthReduced = 0,
 			}; // It's to the combat to see if it's a valid position
 		}
-
-		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-		|*                           PUBLIC METHODS                          *|
-		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
-
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
