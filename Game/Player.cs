@@ -1,18 +1,24 @@
 ﻿using Entities.Abilities;
 using Entities.Characters;
 using Entities.Characters.Tier1;
+using Entities.Characters.Tier2;
+using Entities.Characters.Tier3;
+using Entities.Characters.Tier4;
+using Entities.Characters.Tier5;
+using Entities.Characters.Tier6;
 using Game.Phase;
 using Game.Server;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
-
-#nullable enable
+using Utilities.ExtensionMethods;
 
 namespace Game
 {
@@ -25,6 +31,7 @@ namespace Game
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		private int id;
 		private readonly Character[] characters;
 		private int health;
 		private int currentTurn;
@@ -36,18 +43,74 @@ namespace Game
 		public bool IsAlive => health > 0;
 		public bool IsDead => !IsAlive;
 
+		public int Id
+		{
+			get { return id; }
+			set { id = value; }
+		}
+
+		[IgnoreDataMember]
 		public IReadOnlyCollection<Character> Characters
 		{
 			get { return characters; }
+		}
+
+		[IgnoreDataMember]
+		public string Serialized
+		{
+			get
+			{
+				return JsonConvert.SerializeObject(this);
+			}
 		}
 
 		public string SerializedCharacters
 		{
 			get
 			{
-				string[] tabSerialized = characters.Where(c => c != null).Select(c => c.Serialize()).ToArray();
+				return JsonConvert.SerializeObject(characters.Where(c => c is not null).Select(c => c.Serialize()));
+			}
+			set
+			{
+				string[] tabStr = JsonConvert.DeserializeObject<string[]>(value);
 
-				return JsonConvert.SerializeObject(tabSerialized);
+				IEnumerable<JObject> objects = tabStr.Select(c => JObject.Parse(c));
+				string[] characterNames = objects.Select(o => o.First?.First?.ToString()).GetNotNullValues() ?? Array.Empty<string>();
+
+				if (characterNames.Length < 1) return;
+
+				for (int k = 0; k < characterNames.Length; k++)
+				{
+					string name = characterNames[k];
+
+					characters[k] = name switch
+					{
+						Ant.NAME => Character.Parse<Ant>(tabStr[k]),
+						Beaver.NAME => Character.Parse<Beaver>(tabStr[k]),
+						Mosquito.NAME => Character.Parse<Mosquito>(tabStr[k]),
+
+						Crab.NAME => Character.Parse<Crab>(tabStr[k]),
+						Shrimp.NAME => Character.Parse<Shrimp>(tabStr[k]),
+						Toucan.NAME => Character.Parse<Toucan>(tabStr[k]),
+
+						Blowfish.NAME => Character.Parse<Blowfish>(tabStr[k]),
+						Horse.NAME => Character.Parse<Horse>(tabStr[k]),
+						Luwak.NAME => Character.Parse<Luwak>(tabStr[k]),
+
+						Giraffe.NAME => Character.Parse<Giraffe>(tabStr[k]),
+						Otter.NAME => Character.Parse<Otter>(tabStr[k]),
+						Ox.NAME => Character.Parse<Ox>(tabStr[k]),
+
+						Crocodile.NAME => Character.Parse<Crocodile>(tabStr[k]),
+						Parrot.NAME => Character.Parse<Parrot>(tabStr[k]),
+						Porcupine.NAME => Character.Parse<Beaver>(tabStr[k]),
+
+						Beetle.NAME => Character.Parse<Beetle>(tabStr[k]),
+						Penguin.NAME => Character.Parse<Penguin>(tabStr[k]),
+
+						_ => throw new ArgumentOutOfRangeException(nameof(name), name, null),
+					};
+				}
 			}
 		}
 
@@ -71,6 +134,11 @@ namespace Game
 			// Assumption, position is valid
 			characters[position] = character;
 			character.BattlefieldPosition = position;
+		}
+
+		public new void Connect()
+		{
+			id = base.Connect();
 		}
 
 		public void PlayTurn()
@@ -114,13 +182,19 @@ namespace Game
 
 			Console.WriteLine(">> End of turn... please wait for other players... <<");
 
-			Send(SerializedCharacters);
+			Send(Serialized);
 
-			BattleHistoric battle = Read();
+			BattleHistoric[] battles = Read();
+			BattleHistoric playerBattle = battles.First(b => b.Player.id == id);
 
-			if (battle.Result == BattleResult.Loose) health--;
+			if (playerBattle.Result == BattleResult.Lost) health--;
 
-			DisplayBattle(battle);
+			/* Notify the server if we're still alive */
+			Send(IsAlive.ToString());
+
+			DisplayBattles(battles);
+
+			if (!IsAlive) DisplayEndScreen();
 
 			currentTurn++;
 		}
@@ -128,16 +202,38 @@ namespace Game
 		public void Remove(Character character)
 		{
 			// Assumption, character is valid
+			characters[character.BattlefieldPosition] = null;
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private void DisplayBattle(BattleHistoric battle)
+		private static void DisplayBattles(BattleHistoric[] battles)
 		{
-			Console.WriteLine("Fin du tour...");
+			Console.WriteLine();
+			Console.WriteLine(">\t BATTLE RESULTS \t<");
+
+			foreach (BattleHistoric battle in battles)
+			{
+				Console.WriteLine();
+				Console.WriteLine($"*** Player {battle.Player.id + 1} {battle.Result.ToString().ToLower()} against Player {battle.Opponent.id + 1}");
+				Console.WriteLine($" > Player {battle.Player.id + 1}'s health : {battle.Player.health} <");
+			}
+
+			Console.WriteLine();
+			Console.Write("End of turn, press enter to continue...");
 			Console.ReadLine();
+		}
+
+		private void DisplayEndScreen()
+		{
+			Console.WriteLine();
+			Console.WriteLine("* * * * * * * * * * * * * * *");
+			Console.WriteLine("*         GAME OVER         *");
+			Console.WriteLine("* * * * * * * * * * * * * * *");
+			Console.WriteLine();
+			Console.WriteLine($">> You lost in turn {currentTurn} <<");
 		}
 
 		private void DisplayInformations()
@@ -182,7 +278,7 @@ namespace Game
 					key = Console.ReadKey().Key;
 					Console.WriteLine();
 				} while (key < ConsoleKey.D1 || key > (ConsoleKey)(nbCharacters + (int)ConsoleKey.D1));
-				
+
 				int index = key - ConsoleKey.D1;
 				bool isAdded = false;
 
@@ -197,12 +293,12 @@ namespace Game
 				{
 					characters[index].LevelUp();
 				}
-				// ERROR - Restart handler
+				// Replace existant character
 				else
 				{
-					Console.WriteLine("[ERROR] There is already a character at this index");
-					HandleNewCharacter(character);
-					return;
+					Remove(characters[index]);
+					Add(character, index);
+					isAdded = true;
 				}
 
 				DisplayInformations();
@@ -235,12 +331,21 @@ namespace Game
 			character.Health += e.HealthGiven;
 			character.Damage += e.AttackGiven;
 		}
+		private new BattleHistoric[] Read()
+		{
+			string strData = base.Read();
+			string[] tabStr = JsonConvert.DeserializeObject<string[]>(strData);
+
+			return tabStr?.Select(b => JsonConvert.DeserializeObject<BattleHistoric>(b))?.ToArray();
+		}
 
 		private void UpdateCharacter()
 		{
 			int nbCharacters = characters.Count(c => c is not null);
 
-			Character? character = null;
+			if (nbCharacters < 1) return;
+
+			Character character = null;
 			ConsoleKey key;
 
 			do
@@ -251,7 +356,7 @@ namespace Game
 				key = Console.ReadKey().Key;
 				int index = key - ConsoleKey.D1;
 
-				if (index < characters.Length) character = characters[key - ConsoleKey.D1];
+				if (index < characters.Length && index >= 0) character = characters[key - ConsoleKey.D1];
 			} while (key < ConsoleKey.D1 || key > (ConsoleKey)(nbCharacters + (int)ConsoleKey.D1) || character?.Level >= 9);
 
 			if (character is null) return;

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using Game.Phase;
+using Newtonsoft.Json;
 
 namespace Game.Server
 {
@@ -36,18 +37,32 @@ namespace Game.Server
 		public Client(string ip)
 		{
 			this.ip = ip;
-			this.tcpClient = new TcpClient();
+			
+			tcpClient = new TcpClient();
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                           PUBLIC METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public void Connect()
+		public int Connect()
 		{
 			try
 			{
 				tcpClient.Connect(IP, Server.TCP_PORT);
+
+				Stream stm = tcpClient.GetStream();
+				byte[] bytes = new byte[10];
+
+				int nbBytes = stm.Read(bytes, 0, bytes.Length);
+				string pId = "";
+
+				for (int k = 0; k < nbBytes; k++)
+				{
+					pId += Convert.ToChar(bytes[k]);
+				}
+
+				return int.Parse(pId);
 			}
 			catch (Exception)
 			{
@@ -65,22 +80,20 @@ namespace Game.Server
 		|*                         PROTECTED METHODS                         *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		protected BattleHistoric Read()
-		{
-			return null;
-		}
-
-		protected bool Read2()
+		protected string Read()
 		{
 			Stream stm = tcpClient.GetStream();
+			byte[] bytes = new byte[100000];
 
-			byte[] bytes = new byte[100];
-			int nbBytes = stm.Read(bytes, 0, 100);
+			int nbBytes = stm.Read(bytes, 0, bytes.Length);
+			string strData = "";
 
-			for (int i = 0; i < nbBytes; i++)
-				Console.Write(Convert.ToChar(bytes[i]));
+			for (int k = 0; k < nbBytes; k++)
+			{
+				strData += Convert.ToChar(bytes[k]);
+			}
 
-			return false;
+			return strData;
 		}
 
 		protected void Send(string msgJson)

@@ -14,7 +14,7 @@ namespace Utilities.ExtensionMethods
 
 		public static int GetNotNullLength<T>(this IEnumerable<T?> array)
 		{
-			return array.GetNotNullValues().Length;
+			return array.Count(e => e is not null);
 		}
 
 		public static T[] GetNotNullValues<T>(this IEnumerable<T?> array)

@@ -16,27 +16,28 @@ namespace Game.Phase
 		|*                               FIELDS                              *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private readonly int battleId;
-		private Character[] playerOne;
-		private Character[] playerTwo;
+		private readonly List<string> actions;
+
+		private readonly Player playerOne;
+		private readonly Player playerTwo;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private bool IsEnded => playerOne.Any(c => c is not null && c.IsAlive) && playerTwo.Any(c => c is not null && c.IsAlive);
+		private bool IsEnded => playerOne.Characters.Any(c => c is not null && c.IsAlive) && playerTwo.Characters.Any(c => c is not null && c.IsAlive);
 
-
-		public int Id => battleId;
-		public BattleResult PlayerResult { get; private set; }
+		public Player Player => playerOne;
+		public Player Opponent => playerTwo;
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		public Battle(int battleId, Character[] playerOne, Character[] playerTwo)
+		public Battle(Player playerOne, Player playerTwo)
 		{
-			this.battleId = battleId;
+			actions = new List<string>();
+
 			this.playerOne = playerOne;
 			this.playerTwo = playerTwo;
 		}
@@ -47,14 +48,16 @@ namespace Game.Phase
 
 		public void Start()
 		{
+			actions.Add("Coucou maggle");
+
 			#region StartOfBattle Ability
 
-			foreach (Character character in playerOne.Where(c => c.Ability == Ability.StartOfBattle))
+			foreach (Character character in playerOne.Characters.Where(c => c is not null && c.Ability == Ability.StartOfBattle))
 			{
 				OnStartOfBattle((StartOfBattleEventArgs)character.TriggerAbility());
 			}
 
-			foreach (Character character in playerTwo.Where(c => c.Ability == Ability.StartOfBattle))
+			foreach (Character character in playerTwo.Characters.Where(c => c is not null && c.Ability == Ability.StartOfBattle))
 			{
 				OnStartOfBattle((StartOfBattleEventArgs)character.TriggerAbility());
 			}
@@ -62,12 +65,12 @@ namespace Game.Phase
 			#endregion
 		}
 
-		public void Run()
+		public string[] Run(out BattleResult playerResult)
 		{
 			while (!IsEnded)
 			{
-				Character aliveOne = playerOne.First(c => c is not null && c.IsAlive);
-				Character aliveTwo = playerTwo.First(c => c is not null && c.IsAlive);
+				Character aliveOne = playerOne.Characters.First(c => c is not null && c.IsAlive);
+				Character aliveTwo = playerTwo.Characters.First(c => c is not null && c.IsAlive);
 
 				aliveOne.Health -= aliveTwo.Damage;
 				aliveTwo.Health -= aliveOne.Damage;
@@ -101,9 +104,11 @@ namespace Game.Phase
 				#endregion
 			}
 
-			PlayerResult = playerOne.Any(c => c.IsAlive) && playerTwo.All(c => c.IsDead) ? BattleResult.Win :
-							playerOne.All(c => c.IsDead) && playerTwo.Any(c => c.IsAlive) ? BattleResult.Loose :
-							BattleResult.Tie;
+			playerResult = playerOne.Characters.Any(c => c.IsAlive) && playerTwo.Characters.All(c => c.IsDead) ? BattleResult.Won :
+							playerOne.Characters.All(c => c.IsDead) && playerTwo.Characters.Any(c => c.IsAlive) ? BattleResult.Lost :
+							BattleResult.Tied;
+
+			return actions.ToArray();
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -112,11 +117,11 @@ namespace Game.Phase
 
 		private void OnFaint(FaintEventArgs e)
 		{
-			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
+			IReadOnlyCollection<Character> targetPlayer = e.Side == Side.Player ? playerOne.Characters : playerTwo.Characters;
 
-			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+			int target = e.TargetPosition >= targetPlayer.Count ? targetPlayer.Count - 1 : e.TargetPosition;
 
-			Character character = targetPlayer[target];
+			Character character = targetPlayer.ElementAt(target);
 
 			if (character is null || character.IsDead) return;
 
@@ -128,11 +133,11 @@ namespace Game.Phase
 
 		private void OnHurt(HurtEventArgs e)
 		{
-			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
+			IReadOnlyCollection<Character> targetPlayer = e.Side == Side.Player ? playerOne.Characters : playerTwo.Characters;
 
-			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+			int target = e.TargetPosition >= targetPlayer.Count ? targetPlayer.Count - 1 : e.TargetPosition;
 
-			Character character = targetPlayer[target];
+			Character character = targetPlayer.ElementAt(target);
 
 			if (character is null || character.IsDead) return;
 
@@ -144,11 +149,11 @@ namespace Game.Phase
 
 		private void OnStartOfBattle(StartOfBattleEventArgs e)
 		{
-			Character[] targetPlayer = e.Side == Side.Player ? playerOne : playerTwo;
+			IReadOnlyCollection<Character> targetPlayer = e.Side == Side.Player ? playerOne.Characters : playerTwo.Characters;
 
-			int target = e.TargetPosition >= targetPlayer.Length ? targetPlayer.Length - 1 : e.TargetPosition;
+			int target = e.TargetPosition >= targetPlayer.Count ? targetPlayer.Count - 1 : e.TargetPosition;
 
-			Character character = targetPlayer[target];
+			Character character = targetPlayer.ElementAt(target);
 
 			if (character is null || character.IsDead) return;
 

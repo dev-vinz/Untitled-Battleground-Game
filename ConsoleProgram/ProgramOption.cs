@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Game.Phase
+namespace ConsoleProgram
 {
-	public enum BattleResult
+	public enum ProgramOption
 	{
-		Won,
-		Lost,
-		Tied,
+		Client = ConsoleKey.D1,
+		Server = ConsoleKey.D2,
 	}
 }

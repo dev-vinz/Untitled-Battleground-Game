@@ -13,57 +13,81 @@ namespace ConsoleProgram
 	{
 		static void Main(string[] args)
 		{
-			//RunClient();
-			RunServer();
+			DisplayWelcome();
 
-			Console.ReadLine();
+			ProgramOption option = ReadOption();
+
+			Console.WriteLine();
+
+			switch (option)
+			{
+				case ProgramOption.Client:
+					Battleground.StartClientOption();
+					break;
+				case ProgramOption.Server:
+					Battleground.StartServerOption();
+					break;
+				default:
+					throw new ArgumentOutOfRangeException(nameof(option), option, null);
+			}
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private static void RunClient()
+		private static void DisplayWelcome()
 		{
-			Player p = new Player("157.26.104.10");
-			p.Connect();
+			Console.WriteLine();
+
+			Console.WriteLine("\t\t───▄▀▀▀▄▄▄▄▄▄▄▀▀▀▄───");
+			Console.WriteLine("\t\t───█▒▒░░░░░░░░░▒▒█───");
+			Console.WriteLine("\t\t────█░░█░░░░░█░░█────");
+			Console.WriteLine("\t\t─▄▄──█░░░▀█▀░░░█──▄▄─");
+			Console.WriteLine("\t\t█░░█─▀▄░░░░░░░▄▀─█░░█");
+			Console.WriteLine("\t\t█▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀█");
+			Console.WriteLine("\t\t█░░╦─╦╔╗╦─╔╗╔╗╔╦╗╔╗░░█");
+			Console.WriteLine("\t\t█░░║║║╠─║─║─║║║║║╠─░░█");
+			Console.WriteLine("\t\t█░░╚╩╝╚╝╚╝╚╝╚╝╩─╩╚╝░░█");
+			Console.WriteLine("\t\t█▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█");
+
+			Console.WriteLine();
+
+			Console.WriteLine("\t* .NET Project");
+			Console.WriteLine("\t* Professor : M. Stéphane Beurret");
+			Console.WriteLine("\t* Authors :");
+			Console.WriteLine("\t\t* Vincent Jeannin");
+			Console.WriteLine("\t\t* Benjamin Mouchet");
+			Console.WriteLine("\t\t* Guillaume Mouchet");
+
+			Console.WriteLine();
+
+			Console.Write("\t...Press enter to start the program...");
+			Console.ReadLine();
 		}
 
-		private static void RunServer()
+		private static ProgramOption ReadOption()
 		{
-			Game.Game game = new Game.Game(1);
+			ConsoleKey key;
 
-			Thread thClient = new Thread((object data) =>
+			do
 			{
-				if (data is not Server server) return;
+				Console.Clear();
+				Console.WriteLine();
 
-				Player player = new Player(server.IP);
+				Console.WriteLine("Homepage");
+				Console.WriteLine();
 
-				player.Connect();
+				Console.WriteLine("\t* 1. Join an existing game");
+				Console.WriteLine("\t* 2. Host a new game");
 
-				player.Add(new Ant(), 0);
-				player.Add(new Mosquito(), 1);
+				Console.WriteLine();
+				Console.Write("Select your option : ");
 
-				player.PlayTurn();
-			});
+				key = Console.ReadKey().Key;
+			} while (key != ConsoleKey.D1 && key != ConsoleKey.D2);
 
-			Thread thGame = new Thread((object data) =>
-			{
-				if (data is not Game.Game game) return;
-
-				game.Start();
-
-				//Console.WriteLine("Le jeu démarre");
-
-				while (true)
-				{
-					//Console.WriteLine("*** SERVER ***");
-					game.ApplyTurn();
-				}
-			});
-
-			thGame.Start(game);
-			thClient.Start(game);
+			return (ProgramOption)key;
 		}
 	}
 }
