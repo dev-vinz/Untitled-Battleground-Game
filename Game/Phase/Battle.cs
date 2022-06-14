@@ -25,7 +25,9 @@ namespace Game.Phase
 		|*                             PROPERTIES                            *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private bool IsEnded => playerOne.Characters.Any(c => c is not null && c.IsAlive) && playerTwo.Characters.Any(c => c is not null && c.IsAlive);
+		private bool IsEnded => (playerOne.Characters.All(c => c is null || c.IsDead) && playerTwo.Characters.All(c => c is null || c.IsDead)) ||
+								(playerOne.Characters.Any(c => c is not null && c.IsAlive) && playerTwo.Characters.All(c => c is null || c.IsDead)) ||
+								(playerOne.Characters.All(c => c is null || c.IsDead) && playerTwo.Characters.Any(c => c is not null && c.IsAlive));
 
 		public Player Player => playerOne;
 		public Player Opponent => playerTwo;
@@ -104,8 +106,8 @@ namespace Game.Phase
 				#endregion
 			}
 
-			playerResult = playerOne.Characters.Any(c => c.IsAlive) && playerTwo.Characters.All(c => c.IsDead) ? BattleResult.Won :
-							playerOne.Characters.All(c => c.IsDead) && playerTwo.Characters.Any(c => c.IsAlive) ? BattleResult.Lost :
+			playerResult = playerOne.Characters.Any(c => c is not null && c.IsAlive) && playerTwo.Characters.All(c => c is null || c.IsDead) ? BattleResult.Won :
+							playerOne.Characters.All(c => c is null || c.IsDead) && playerTwo.Characters.Any(c => c is not null && c.IsAlive) ? BattleResult.Lost :
 							BattleResult.Tied;
 
 			return actions.ToArray();

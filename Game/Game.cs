@@ -101,8 +101,8 @@ namespace Game
 					rnd = random.Next(allPlayers.Length);
 				} while (rnd == k && allPlayers.Length > 1);
 
-				Player playerOne = allPlayers[k];
-				Player playerTwo = allPlayers[rnd];
+				Player playerOne = new Player(allPlayers[k]);
+				Player playerTwo = new Player(allPlayers[rnd]);
 
 				battles[k] = new Battle(playerOne, playerTwo);
 			}
@@ -125,6 +125,8 @@ namespace Game
 
 					string[] actions = battle.Run(out BattleResult playerResult);
 					tabBattles[battle.Player.Id] = new BattleHistoric(playerResult, actions, battle.Player, battle.Opponent);
+
+					if (playerResult == BattleResult.Lost) battle.Player.Health--;
 				});
 
 				threads[k].Start(battles[k]);

@@ -49,6 +49,12 @@ namespace Game
 			set { id = value; }
 		}
 
+		public int Health
+		{
+			get { return health; }
+			set { health = value; }
+		}
+
 		[IgnoreDataMember]
 		public IReadOnlyCollection<Character> Characters
 		{
@@ -118,11 +124,20 @@ namespace Game
 		|*                            CONSTRUCTORS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		[JsonConstructor]
 		public Player(string ip = "localhost") : base(ip)
 		{
 			characters = new Character[NB_CHARACTERS];
 			health = MAX_HEALTH;
 			currentTurn = 0;
+		}
+
+		public Player(Player player) : base(player.IP)
+		{
+			id = player.id;
+			characters = player.characters.Select(c => c?.Clone()).ToArray();
+			health = player.health;
+			currentTurn = player.currentTurn;
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
@@ -209,7 +224,7 @@ namespace Game
 		|*                          PRIVATE METHODS                          *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-		private static void DisplayBattles(BattleHistoric[] battles)
+		private void DisplayBattles(BattleHistoric[] battles)
 		{
 			Console.WriteLine();
 			Console.WriteLine(">\t BATTLE RESULTS \t<");
@@ -219,6 +234,14 @@ namespace Game
 				Console.WriteLine();
 				Console.WriteLine($"*** Player {battle.Player.id + 1} {battle.Result.ToString().ToLower()} against Player {battle.Opponent.id + 1}");
 				Console.WriteLine($" > Player {battle.Player.id + 1}'s health : {battle.Player.health} <");
+
+				if (this == battle.Player)
+				{
+					foreach (string action in battle.Actions)
+					{
+						Console.WriteLine($"\t> {action}");
+					}
+				}
 			}
 
 			Console.WriteLine();
@@ -240,7 +263,7 @@ namespace Game
 		{
 			Console.Clear();
 
-			Console.WriteLine($"\t-- HP : {health}/{MAX_HEALTH}\t Turn : {currentTurn} --");
+			Console.WriteLine($"\t-- Player {id + 1} \t HP : {health}/{MAX_HEALTH}\t Turn : {currentTurn} --");
 			Console.WriteLine();
 
 			foreach (Character character in characters)
@@ -380,6 +403,7 @@ namespace Game
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
+
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                          STATIC METHODS                           *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -392,6 +416,26 @@ namespace Game
 
 
 
+		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+		|*                         OVERRIDE METHODS                          *|
+		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || GetType() != obj.GetType())
+			{
+				return false;
+			}
+
+			Player player = obj as Player;
+
+			return player.id == id;
+		}
+
+		public override int GetHashCode()
+		{
+			return id.GetHashCode();
+		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                              INDEXERS                             *|
@@ -403,5 +447,23 @@ namespace Game
 		|*                         OPERATORS OVERLOAD                        *|
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+		public static bool operator ==(Player pOne, Player pTwo)
+		{
+			if (pOne is null && pTwo is null) return true;
+
+			if (pOne is null)
+			{
+				return pTwo.Equals(pOne);
+			}
+			else
+			{
+				return pOne.Equals(pTwo);
+			}
+		}
+
+		public static bool operator !=(Player pOne, Player pTwo)
+		{
+			return !(pOne == pTwo);
+		}
 	}
 }
