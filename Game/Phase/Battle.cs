@@ -72,10 +72,11 @@ namespace Game.Phase
 				Character aliveOne = playerOne.Characters.First(c => c is not null && c.IsAlive);
 				Character aliveTwo = playerTwo.Characters.First(c => c is not null && c.IsAlive);
 
+				actions.Add($"{aliveOne.Name} ({aliveOne.Damage}/{aliveOne.Health}) VS {aliveTwo.Name} ({aliveTwo.Damage}/{aliveTwo.Health})");
+
 				aliveOne.Health -= aliveTwo.Damage;
 				aliveTwo.Health -= aliveOne.Damage;
 
-				actions.Add($"{aliveOne.Name} ({aliveOne.Damage}/{aliveOne.Health}) VS {aliveTwo.Name} ({aliveTwo.Damage}/{aliveTwo.Health})");
 				actions.Add($"- {aliveOne.Name} has now {aliveOne.Health} health");
 				actions.Add($"- {aliveTwo.Name} has now {aliveTwo.Health} health");
 
