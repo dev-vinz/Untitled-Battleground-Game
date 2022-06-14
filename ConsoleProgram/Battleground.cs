@@ -45,9 +45,9 @@ namespace ConsoleProgram
 
 			string strPlayers = Console.ReadLine();
 
-			if (!int.TryParse(strPlayers, out int nbPlayers))
+			if (!int.TryParse(strPlayers, out int nbPlayers) && nbPlayers < 2)
 			{
-				Console.WriteLine($"[ERROR] {strPlayers} is not a number");
+				Console.WriteLine($"[ERROR] {strPlayers} is not a number superior than 1");
 				return;
 			}
 
@@ -88,11 +88,8 @@ namespace ConsoleProgram
 
 				game.Start();
 
-				//Console.WriteLine("Le jeu démarre");
-
 				while (!game.IsEnded)
 				{
-					//Console.WriteLine("*** SERVER ***");
 					game.ApplyTurn();
 				}
 			});
