@@ -33,6 +33,8 @@ namespace ConsoleProgram
 				return;
 			}
 
+			Console.Title = $"{ip} - Player {player.Id + 1}";
+
 			while (player.IsAlive)
 			{
 				player.PlayTurn();
@@ -75,6 +77,8 @@ namespace ConsoleProgram
 				Player player = new Player(server.IP);
 
 				player.Connect();
+
+				Console.Title = $"{server.IP} - Player {player.Id + 1}";
 
 				while (player.IsAlive)
 				{
