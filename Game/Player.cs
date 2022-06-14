@@ -337,7 +337,7 @@ namespace Game
 					Console.WriteLine($"> Your {character.Name} has been leveled up ! <");
 				}
 			}
-			else
+			else if (key == ConsoleKey.N)
 			{
 				Console.WriteLine("> This brand new character has not been added to your team <");
 			}
