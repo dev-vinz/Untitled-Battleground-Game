@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier3
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => ":luwak:";
+		public override string Description => "Start Of Battle : Kill a random ally";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -70,6 +71,7 @@ namespace Entities.Characters.Tier3
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = 999999,
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position

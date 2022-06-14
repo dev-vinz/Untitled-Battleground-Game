@@ -15,5 +15,6 @@ namespace Entities.Abilities
 		
 		public Side Side { get; set; }
 		public int TargetPosition { get; set; }
+		public Character InitialCharacter { get; set; }
 	}
 }

@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier2
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => ":toucan:";
+		public override string Description => "Hurt : Gives +2/+2 to an ally just behind";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -69,6 +70,7 @@ namespace Entities.Characters.Tier2
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				AttackGiven = 2 * Level,
 				HealthGiven = 2 * Level,
 				HealthReduced = 0,

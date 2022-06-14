@@ -36,6 +36,7 @@ namespace Entities.Characters
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected abstract string Emoji { get; }
+		public abstract string Description { get; }
 
 		public string Name
 		{

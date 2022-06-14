@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier1
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🐜";
+		public override string Description => "Faint : Give +2 attack and +1 health to an ally behind";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -73,6 +74,7 @@ namespace Entities.Characters.Tier1
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				AttackGiven = 1 * Level,
 				HealthGiven = 2 * Level,
 				HealthReduced = 0,

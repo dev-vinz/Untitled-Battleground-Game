@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier5
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => ":porcupine:";
+		public override string Description => "Start Of Battle : Deals 1 damage at to the pet behind him";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -64,6 +65,7 @@ namespace Entities.Characters.Tier5
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = 1,
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position

@@ -167,6 +167,8 @@ namespace Game
 
 			#endregion
 
+			DisplayInformations();
+
 			#region StartOfTurn Ability
 
 			foreach (Character character in characters.Where(c => c is not null && c.Ability == Ability.StartOfTurn))
@@ -175,8 +177,6 @@ namespace Game
 			}
 
 			#endregion
-
-			DisplayInformations();
 
 			Character newCharacter = Shop.GetNewCharacter(currentTurn);
 
@@ -284,6 +284,7 @@ namespace Game
 
 			Console.WriteLine();
 			Console.WriteLine($"You received a new pet : {character.Name} ({character.Damage}/{character.Health})");
+			Console.WriteLine($"\t> {character.Description}");
 
 			do
 			{
@@ -351,8 +352,14 @@ namespace Game
 
 			if (character is null || character.IsDead) return;
 
+			Console.WriteLine($"[{e.InitialCharacter.Name}] {e.InitialCharacter.Description}");
+
 			character.Health += e.HealthGiven;
 			character.Damage += e.AttackGiven;
+
+			Console.WriteLine($"\t> On {character.Name} | Health : {character.Health} | Attack : {character.Damage}");
+			
+			Console.WriteLine();
 		}
 		private new BattleHistoric[] Read()
 		{

@@ -50,8 +50,6 @@ namespace Game.Phase
 
 		public void Start()
 		{
-			actions.Add("Coucou maggle");
-
 			#region StartOfBattle Ability
 
 			foreach (Character character in playerOne.Characters.Where(c => c is not null && c.Ability == Ability.StartOfBattle))
@@ -76,6 +74,10 @@ namespace Game.Phase
 
 				aliveOne.Health -= aliveTwo.Damage;
 				aliveTwo.Health -= aliveOne.Damage;
+
+				actions.Add($"{aliveOne.Name} ({aliveOne.Damage}/{aliveOne.Health}) VS {aliveTwo.Name} ({aliveTwo.Damage}/{aliveTwo.Health})");
+				actions.Add($"- {aliveOne.Name} has now {aliveOne.Health} health");
+				actions.Add($"- {aliveTwo.Name} has now {aliveTwo.Health} health");
 
 				#region Hurt Ability
 
@@ -127,10 +129,14 @@ namespace Game.Phase
 
 			if (character is null || character.IsDead) return;
 
+			actions.Add($"[{e.InitialCharacter.Name}] {e.InitialCharacter.Description}");
+
 			character.Health -= e.HealthReduced;
 			character.Health += e.HealthGiven;
 
 			character.Damage += e.AttackGiven;
+
+			actions.Add($"\t> On {character.Name} | Health : {character.Health} | Attack : {character.Damage}");
 		}
 
 		private void OnHurt(HurtEventArgs e)
@@ -143,10 +149,14 @@ namespace Game.Phase
 
 			if (character is null || character.IsDead) return;
 
+			actions.Add($"[{e.InitialCharacter.Name}] {e.InitialCharacter.Description}");
+
 			character.Health -= e.HealthReduced;
 			character.Health += e.HealthGiven;
 
 			character.Damage += e.AttackGiven;
+
+			actions.Add($"\t> On {character.Name} | Health : {character.Health} | Attack : {character.Damage}");
 		}
 
 		private void OnStartOfBattle(StartOfBattleEventArgs e)
@@ -159,8 +169,12 @@ namespace Game.Phase
 
 			if (character is null || character.IsDead) return;
 
+			actions.Add($"[{e.InitialCharacter.Name}] {e.InitialCharacter.Description}");
+
 			character.Health -= e.HealthReduced;
 			character.Health += e.HealthGiven;
+
+			actions.Add($"\t> On {character.Name} | Health : {character.Health} | Attack : {character.Damage}");
 		}
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\

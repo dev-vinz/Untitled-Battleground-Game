@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier1
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🦟";
+		public override string Description => "Start Of Battle : Deals 1 Damage to a random opponent";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -66,6 +67,7 @@ namespace Entities.Characters.Tier1
 			{
 				Side = Side.Opponent,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = Level,
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position

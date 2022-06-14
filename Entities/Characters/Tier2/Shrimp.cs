@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier2
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🦐";
+		public override string Description => "Faint : Deals 5 damages to the last enemy";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -64,6 +65,8 @@ namespace Entities.Characters.Tier2
 			{
 				Side = Side.Opponent,
 				TargetPosition = target,
+				InitialCharacter = this,
+				AttackGiven = 0,
 				HealthReduced = 5 * Level,
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position

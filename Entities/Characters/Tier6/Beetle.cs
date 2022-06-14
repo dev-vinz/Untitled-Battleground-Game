@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier6
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🪲";
+		public override string Description => "Hurt : Gives his health to a random ally";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -70,6 +71,7 @@ namespace Entities.Characters.Tier6
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthGiven = Health * Level,
 				AttackGiven = 0,
 				HealthReduced = 0,

@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier4
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🦒";
+		public override string Description => "Start Of Turn : Give +2/+2 to the front character";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -64,6 +65,7 @@ namespace Entities.Characters.Tier4
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				AttackGiven = 2 * Level,
 				HealthGiven = 2 * Level,
 			}; // It's to the combat to see if it's a valid position

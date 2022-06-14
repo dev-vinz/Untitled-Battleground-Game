@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier4
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🐂";
+		public override string Description => "Hurt : Give +2/+2 to the ally just behind";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -69,6 +70,7 @@ namespace Entities.Characters.Tier4
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				AttackGiven = 2 * Level,
 				HealthGiven = 2 * Level,
 				HealthReduced = 0,

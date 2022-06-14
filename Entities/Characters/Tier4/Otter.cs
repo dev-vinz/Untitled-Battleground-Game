@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier4
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🦦";
+		public override string Description => "Faint : Deals it's health to an opponent";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -66,6 +67,7 @@ namespace Entities.Characters.Tier4
 			{
 				Side = Side.Opponent,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = Health * Level,
 				AttackGiven = 0,
 				HealthGiven = 0,

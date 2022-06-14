@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier2
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🦀";
+		public override string Description => "Start Of Battle : Give its health to an ally just in front";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -69,6 +70,7 @@ namespace Entities.Characters.Tier2
 			{
 				Side = Side.Player,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthGiven = Health * Level,
 				HealthReduced = 0,
 			}; // It's to the combat to see if it's a valid position

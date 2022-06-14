@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier5
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🐊";
+		public override string Description => "Start Of Battle : Deals 7 attack to last oponnent";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -64,6 +65,7 @@ namespace Entities.Characters.Tier5
 			{
 				Side = Side.Opponent,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = 7 * Level,
 				HealthGiven = 0,
 			}; // It's to the combat to see if it's a valid position

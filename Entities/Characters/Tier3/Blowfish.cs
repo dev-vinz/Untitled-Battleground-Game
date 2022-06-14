@@ -22,6 +22,7 @@ namespace Entities.Characters.Tier3
 		\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 		protected override string Emoji => "🐡";
+		public override string Description => "Hurt : Deals 2 damage to an random opponent";
 
 		/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 		|*                            CONSTRUCTORS                           *|
@@ -66,6 +67,7 @@ namespace Entities.Characters.Tier3
 			{
 				Side = Side.Opponent,
 				TargetPosition = target,
+				InitialCharacter = this,
 				HealthReduced = 2 * Level,
 				AttackGiven = 0,
 				HealthGiven = 0,
