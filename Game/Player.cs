@@ -81,7 +81,7 @@ namespace Game
 				string[] tabStr = JsonConvert.DeserializeObject<string[]>(value);
 
 				IEnumerable<JObject> objects = tabStr.Select(c => JObject.Parse(c));
-				string[] characterNames = objects.Select(o => o.First?.ElementAt(1)?.ToString()).GetNotNullValues() ?? Array.Empty<string>();
+				string[] characterNames = objects.Select(o => o.First?.Next?.First?.ToString()).GetNotNullValues() ?? Array.Empty<string>();
 
 				if (characterNames.Length < 1) return;
 
