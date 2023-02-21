@@ -1,4 +1,4 @@
-# Jeannin_Mouchet_Mouchet
+# Untitled Battleground Game
 
 - Jeannin Vincent
 - Mouchet Benjamin
